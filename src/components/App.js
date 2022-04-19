@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Recognizer from "../parser/recognizer";
 
 class App extends Component {
   state = {
@@ -14,6 +15,9 @@ class App extends Component {
     event.preventDefault();
 
     this.setState({ result: this.state.query });
+
+    const recognizer = new Recognizer(this.state.query);
+    recognizer.query();
   };
 
   render() {
