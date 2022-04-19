@@ -1,8 +1,33 @@
 import React, { Component } from "react";
 
 class App extends Component {
+  state = {
+    query: "",
+    result: "",
+  };
+
+  handleChange = (event) => {
+    this.setState({ query: event.target.value });
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+
+    this.setState({ result: this.state.query });
+  };
+
   render() {
-    return <div>Hello World!</div>;
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <textarea onChange={this.handleChange} value={this.state.comment} />
+          <div>
+            <button>Submit Comment</button>
+          </div>
+        </form>
+        <div>{this.state.result}</div>
+      </div>
+    );
   }
 }
 
