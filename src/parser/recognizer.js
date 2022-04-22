@@ -1,11 +1,18 @@
+// TODO: overhaul error throwing
 import lexer from "./lexer";
 
 class Recognizer {
-  constructor(input) {
-    this.lexer = new lexer(input);
+  constructor() {
+    this.lexer = new lexer();
+  }
+
+  parseInput(input) {
+    this.lexer.tokenize(input);
+    this.query();
   }
 
   query() {
+    console.log(this.lexer.tokens);
     if (this.lexer.inspect("get")) {
       this.lexer.consume("get");
       this.get();
@@ -36,6 +43,7 @@ class Recognizer {
 
   add() {
     this.term();
+    this.lexer.consume("from");
     this.primarycondition();
     this.secondaryconditions();
   }
@@ -58,6 +66,7 @@ class Recognizer {
       this.term();
       this.secondaryconditions();
     } else if (this.lexer.inspect("playlist")) {
+      this.lexer.consume("playlist");
       this.term();
     } else {
       throw new Error("Invalid delete statement");
@@ -65,12 +74,40 @@ class Recognizer {
   }
 
   primarycondition() {
-    this.keyword();
-    this.conditionRHS();
+    this.primarykeyword();
+    this.lexer.consume(":");
+    this.primaryconditionRHS();
     while (this.lexer.inspect("union")) {
       this.lexer.consume("union");
-      this.keyword();
-      this.conditionRHS();
+      this.primarykeyword();
+      this.lexer.consume(":");
+      this.primaryconditionRHS();
+    }
+  }
+
+  primarykeyword() {
+    if (this.lexer.inspect("artist")) {
+      this.lexer.consume("artist");
+    } else if (this.lexer.inspect("album")) {
+      this.lexer.consume("album");
+    } else if (this.lexer.inspect("track")) {
+      this.lexer.consume("track");
+    } else if (this.lexer.inspect("playlist")) {
+      this.lexer.consume("playlist");
+    } else {
+      throw new Error("Invalid primary condition LHS");
+    }
+  }
+
+  primaryconditionRHS() {
+    if (this.lexer.inspectTerm()) {
+      this.term();
+    } else if (this.lexer.inspect("[")) {
+      this.lexer.consume("[");
+      this.terms();
+      this.lexer.consume("]");
+    } else {
+      throw new Error("Invalid primary condition RHS");
     }
   }
 
@@ -98,8 +135,8 @@ class Recognizer {
   }
 
   notTerm() {
-    if (this.lexer.inspect("NOT")) {
-      this.lexer.consume("NOT");
+    if (this.lexer.inspect("not")) {
+      this.lexer.consume("not");
       this.notTerm();
     } else if (this.lexer.inspect("(")) {
       this.lexer.consume("(");
@@ -123,6 +160,7 @@ class Recognizer {
       this.lexer.consume("in");
       this.lexer.consume("(");
       this.terms();
+      this.lexer.consume(")");
     } else if (this.lexer.inspect("like")) {
       this.lexer.consume("like");
       this.term();
@@ -136,10 +174,12 @@ class Recognizer {
       this.lexer.consume("artist");
     } else if (this.lexer.inspect("album")) {
       this.lexer.consume("album");
-    } else if (this.lexer.inspect("like")) {
-      this.lexer.consume("like");
+    } else if (this.lexer.inspect("track")) {
+      this.lexer.consume("track");
+    } else if (this.lexer.inspect("playlist")) {
+      this.lexer.consume("playlist");
     } else {
-      throw new Error("Invalid condition LHS");
+      throw new Error("Invalid secondary condition LHS");
     }
   }
 

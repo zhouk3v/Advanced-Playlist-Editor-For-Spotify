@@ -2,10 +2,14 @@ import React, { Component } from "react";
 import Recognizer from "../parser/recognizer";
 
 class App extends Component {
-  state = {
-    query: "",
-    result: "",
-  };
+  constructor() {
+    super();
+    this.state = {
+      query: "",
+      result: "",
+    };
+    this.recognizer = new Recognizer();
+  }
 
   handleChange = (event) => {
     this.setState({ query: event.target.value });
@@ -16,8 +20,7 @@ class App extends Component {
 
     this.setState({ result: this.state.query });
 
-    const recognizer = new Recognizer(this.state.query);
-    recognizer.query();
+    this.recognizer.parseInput(this.state.query);
   };
 
   render() {

@@ -1,39 +1,46 @@
+// TODO: overhaul error throwing
 class lexer {
-  constructor(input) {
-    this.input = [...input.trim()];
-    this.index = 0;
-    this.tokens = [];
-    this.state = 0;
-    this.tokenize();
+  constructor() {
+    this.bracketChars = new Set(["(", ")", ",", "[", "]"]);
+    this.assignChars = new Set([":", "="]);
   }
 
-  tokenize() {
-    const inputLength = this.input.length;
+  tokenize(input) {
+    const inputLength = input.length;
+    this.tokens = [];
+    this.index = 0;
     let token = "";
-    for (let i = 0; i < inputLength; i++) {
-      if (this.input[i] === " ") {
-        this.tokens.push(token);
+    let i = 0;
+    while (i < inputLength) {
+      if (input[i] === " ") {
+        if (token !== "") {
+          this.tokens.push(token);
+        }
         token = "";
-      } else if (this.input[i] === `"`) {
+      } else if (input[i] === `"`) {
         token = token + `"`;
         i++;
-        while (i < inputLength && this.input[i] !== `"`) {
-          token = token + this.input[i];
+        while (i < inputLength && input[i] !== `"`) {
+          token = token + input[i];
           i++;
+        }
+        if (i === inputLength) {
+          throw new Error(`missing closing "`);
         }
         token = token + '"';
         this.tokens.push(token);
         token = "";
-      } else if (
-        this.input[i] === "(" ||
-        this.input[i] === ")" ||
-        this.input[i] === ","
-      ) {
-        this.tokens.push(this.input[i]);
+      } else if (this.bracketChars.has(input[i]) || input[i] === ",") {
+        this.tokens.push(input[i]);
+        token = "";
+      } else if (this.assignChars.has(input[i])) {
+        this.tokens.push(token);
+        this.tokens.push(input[i]);
         token = "";
       } else {
-        token = token + this.input[i];
+        token = token + input[i];
       }
+      i++;
     }
   }
 
@@ -73,11 +80,11 @@ class lexer {
   }
 
   _inspectEOF() {
-    return this.index === this.input.length;
+    return this.index === this.tokens.length;
   }
 
   _isTerm(input) {
-    return input[0] === `"` && input[this.token.length - 1] === `"`;
+    return input[0] === `"` && input[input.length - 1] === `"`;
   }
 }
 
