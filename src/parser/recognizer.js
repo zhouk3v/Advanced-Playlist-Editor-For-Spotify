@@ -12,7 +12,6 @@ class Recognizer {
   }
 
   query() {
-    console.log(this.lexer.tokens);
     if (this.lexer.inspect("get")) {
       this.lexer.consume("get");
       this.get();
@@ -53,6 +52,7 @@ class Recognizer {
   }
 
   search() {
+    this.keyword();
     this.term();
   }
 

@@ -20,7 +20,7 @@ it("handles delete tracks query", () => {
 });
 
 it("handles search query", () => {
-  recognizer.parseInput(`search "carly rae jepsen"`);
+  recognizer.parseInput(`search artist "carly rae jepsen"`);
 });
 
 it("handles create playlist query", () => {
