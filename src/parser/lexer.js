@@ -24,9 +24,6 @@ class lexer {
           token = token + input[i];
           i++;
         }
-        if (i === inputLength) {
-          throw new Error(`missing closing "`);
-        }
         token = token + '"';
         this.tokens.push(token);
         token = "";
@@ -68,7 +65,7 @@ class lexer {
       this.index++;
       return token.slice(1, token.size - 1);
     } else {
-      throw new Error(`Unexpected token ${token}, are you missing a '"'?`);
+      throw new Error(`Unexpected token ${token}, expecting a term here`);
     }
   }
 
