@@ -14,7 +14,7 @@ class BaseCondition {
         const termsStr = this.term.join();
         return `${this.keyword} in (${termsStr})`;
       case REGEX_CONDITION:
-        return `${this.keyword} LIKE ${this.term}`;
+        return `${this.keyword} like ${this.term}`;
       default:
         return `THIS SHOULD NOT APPEAR`;
     }
