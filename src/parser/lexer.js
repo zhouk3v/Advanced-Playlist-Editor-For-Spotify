@@ -24,7 +24,9 @@ class lexer {
           token = token + input[i];
           i++;
         }
-        token = token + '"';
+        if (input[i] === `"`) {
+          token = token + '"';
+        }
         this.tokens.push(token);
         token = "";
       } else if (this.bracketChars.has(input[i]) || input[i] === ",") {
@@ -63,7 +65,7 @@ class lexer {
     const token = this.tokens[this.index];
     if (this._isTerm(token)) {
       this.index++;
-      return token.slice(1, token.size - 1);
+      return token.slice(1, -1);
     } else {
       throw new Error(`Unexpected token ${token}, expecting a term here`);
     }
