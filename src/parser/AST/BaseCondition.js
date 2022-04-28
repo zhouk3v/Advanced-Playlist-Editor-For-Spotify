@@ -21,4 +21,4 @@ class BaseCondition {
   }
 }
 
-export default Condition;
+export default BaseCondition;
