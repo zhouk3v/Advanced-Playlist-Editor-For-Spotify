@@ -1,4 +1,4 @@
-class Search {
+class Create {
   constructor(term) {
     this.term = term;
   }
@@ -7,4 +7,4 @@ class Search {
   }
 }
 
-export default Search;
+export default Create;

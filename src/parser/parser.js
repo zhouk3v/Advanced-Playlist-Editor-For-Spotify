@@ -1,5 +1,18 @@
 // TODO: overhaul error throwing
+import { EQUALS_CONDITION, IN_CONDITION, REGEX_CONDITION } from "./config";
 import lexer from "./lexer";
+import add from "./AST/Add";
+import andExpr from "./AST/AndExpr";
+import baseCondition from "./AST/BaseCondition";
+import create from "./AST/Create";
+import deleteplaylist from "./AST/DeletePlaylist";
+import deletetrack from "./AST/DeleteTrack";
+import get from "./AST/Get";
+import notExpr from "./AST/NotExpr";
+import orExpr from "./AST/OrExpr";
+import primarycondition from "./AST/PrimaryCondition";
+import search from "./AST/Search";
+import secondaryconditions from "./AST/SecondaryCondition";
 
 class Recognizer {
   constructor() {
@@ -38,136 +51,167 @@ class Recognizer {
   }
 
   get() {
-    this.primarycondition();
-    this.secondaryconditions();
+    const primary = this.primarycondition();
+    const secondary = this.secondaryconditions();
+    return new get(primary, secondary);
   }
 
   add() {
-    this.term();
+    const playlist = this.term();
     this.lexer.consume("from");
-    this.primarycondition();
-    this.secondaryconditions();
+    const primary = this.primarycondition();
+    const secondary = this.secondaryconditions();
+    return new add(playlist, primary, secondary);
   }
 
   delete() {
-    this.deleteRHS();
+    return this.deleteRHS();
   }
 
   search() {
-    this.keyword();
-    this.term();
+    const keyword = this.keyword();
+    const term = this.term();
+    return new search(keyword, term);
   }
 
   create() {
-    this.term();
+    const playlist = this.term();
+    return new create(playlist);
   }
 
   deleteRHS() {
     if (this.lexer.inspect("from")) {
       this.lexer.consume("from");
-      this.term();
-      this.secondaryconditions();
+      const playlist = this.term();
+      const secondary = this.secondaryconditions();
+      return new deletetrack(playlist, secondary);
     } else if (this.lexer.inspect("playlist")) {
       this.lexer.consume("playlist");
-      this.term();
+      const playlist = this.term();
+      return new deleteplaylist(playlist);
     } else {
       throw new Error("Invalid delete statement");
     }
   }
 
   primarycondition() {
-    this.primarykeyword();
+    const primary = new primarycondition();
+    const keyword = this.primarykeyword();
     this.lexer.consume(":");
-    this.primaryconditionRHS();
+    const terms = this.primaryconditionRHS();
+    primary.addCondition(keyword, terms);
     while (this.lexer.inspect("union")) {
       this.lexer.consume("union");
-      this.primarykeyword();
+      const unionKeyword = this.primarykeyword();
       this.lexer.consume(":");
-      this.primaryconditionRHS();
+      const unionTerms = this.primaryconditionRHS();
+      primary.addCondition(unionKeyword, unionTerms);
     }
+    return primary;
   }
 
   primarykeyword() {
     if (this.lexer.inspect("artist")) {
-      this.lexer.consume("artist");
+      return this.lexer.consume("artist");
     } else if (this.lexer.inspect("album")) {
-      this.lexer.consume("album");
+      return this.lexer.consume("album");
     } else if (this.lexer.inspect("track")) {
-      this.lexer.consume("track");
+      return this.lexer.consume("track");
     } else if (this.lexer.inspect("playlist")) {
-      this.lexer.consume("playlist");
+      return this.lexer.consume("playlist");
     } else {
       throw new Error("Invalid primary condition LHS");
     }
   }
 
   primaryconditionRHS() {
+    let terms = [];
     if (this.lexer.inspectTerm()) {
-      this.term();
+      const term = this.term();
+      terms.push(term);
     } else if (this.lexer.inspect("[")) {
       this.lexer.consume("[");
-      this.terms();
+      const toAppend = this.terms();
+      terms = terms.concat(toAppend);
       this.lexer.consume("]");
     } else {
       throw new Error("Invalid primary condition RHS");
     }
+    return terms;
   }
 
   secondaryconditions() {
     if (this.lexer.inspect("where")) {
       this.lexer.consume("where");
-      this.orTerm();
+      const expr = this.orTerm();
+      return new secondaryconditions(expr);
     } else {
       return null;
     }
   }
 
   orTerm() {
-    this.andTerm();
+    let expr = this.andTerm();
     if (this.lexer.inspect("or")) {
       this.lexer.consume("or");
-      this.orTerm();
+      expr = new orExpr(expr, this.orTerm());
     }
+    return expr;
   }
 
   andTerm() {
-    this.notTerm();
+    let expr = this.notTerm();
     if (this.lexer.inspect("and")) {
       this.lexer.consume("and");
-      this.andTerm();
+      expr = new andExpr(expr, this.andTerm());
     }
+    return expr;
   }
 
   notTerm() {
     if (this.lexer.inspect("not")) {
       this.lexer.consume("not");
-      this.notTerm();
+      return new notExpr(this.notTerm());
     } else if (this.lexer.inspect("(")) {
       this.lexer.consume("(");
-      this.orTerm();
+      const expr = this.orTerm();
       this.lexer.consume(")");
+      return expr;
     } else {
-      this.condition();
+      return this.condition();
     }
   }
 
   condition() {
-    this.keyword();
-    this.conditionRHS();
+    const keyword = this.keyword();
+    const rhs = this.conditionRHS();
+    return new baseCondition(keyword, rhs);
   }
 
   conditionRHS() {
     if (this.lexer.inspect("=")) {
       this.lexer.consume("=");
-      this.term();
+      const term = this.term();
+      return {
+        type: EQUALS_CONDITION,
+        term: term,
+      };
     } else if (this.lexer.inspect("in")) {
       this.lexer.consume("in");
       this.lexer.consume("(");
-      this.terms();
+      const terms = this.terms();
       this.lexer.consume(")");
+      return {
+        type: IN_CONDITION,
+        term: terms,
+      };
     } else if (this.lexer.inspect("like")) {
       this.lexer.consume("like");
-      this.term();
+      const term = this.term();
+      return {
+        type: REGEX_CONDITION,
+        term: term,
+      };
     } else {
       throw new Error("Invalid condition RHS");
     }
@@ -175,29 +219,31 @@ class Recognizer {
 
   keyword() {
     if (this.lexer.inspect("artist")) {
-      this.lexer.consume("artist");
+      return this.lexer.consume("artist");
     } else if (this.lexer.inspect("album")) {
-      this.lexer.consume("album");
+      return this.lexer.consume("album");
     } else if (this.lexer.inspect("track")) {
-      this.lexer.consume("track");
+      return this.lexer.consume("track");
     } else if (this.lexer.inspect("playlist")) {
-      this.lexer.consume("playlist");
+      return this.lexer.consume("playlist");
     } else {
       throw new Error("Invalid secondary condition LHS");
     }
   }
 
   terms() {
-    this.term();
+    const termsArr = [];
+    termsArr.push(this.term());
     while (this.lexer.inspect(",")) {
       this.lexer.consume(",");
-      this.term();
+      termsArr.push(this.term());
     }
+    return termsArr;
   }
 
   term() {
     if (this.lexer.inspectTerm()) {
-      this.lexer.consumeTerm();
+      return this.lexer.consumeTerm();
     } else {
       throw new Error("Invalid term");
     }
