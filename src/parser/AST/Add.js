@@ -5,7 +5,9 @@ class Add {
     this.secondary = secondary;
   }
   toString() {
-    return `add to ${this.playlist.toString()} from ${this.primary.toString()} ${this.secondary.toString()}`;
+    return `add to ${this.playlist.toString()} from ${this.primary.toString()} ${
+      this.secondary ? this.secondarytoString() : ""
+    }`;
   }
 }
 

@@ -4,7 +4,9 @@ class Get {
     this.secondary = secondary;
   }
   toString() {
-    return `get ${this.primary.toString()} ${this.secondary.toString()}`;
+    return `get ${this.primary.toString()} ${
+      this.secondary ? this.secondarytoString() : ""
+    }`;
   }
 }
 
