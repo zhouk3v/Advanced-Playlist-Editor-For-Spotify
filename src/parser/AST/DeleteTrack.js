@@ -5,7 +5,7 @@ class DeleteTrack {
   }
   toString() {
     return `delete from ${this.playlist.toString()} ${
-      this.secondary ? this.secondarytoString() : ""
+      this.secondary ? this.secondary.toString() : ""
     }`;
   }
 }

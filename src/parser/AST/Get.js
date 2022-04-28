@@ -5,7 +5,7 @@ class Get {
   }
   toString() {
     return `get ${this.primary.toString()} ${
-      this.secondary ? this.secondarytoString() : ""
+      this.secondary ? this.secondary.toString() : ""
     }`;
   }
 }
