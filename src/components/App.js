@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Recognizer from "../parser/recognizer";
+import Parser from "../parser/parser";
 
 class App extends Component {
   constructor() {
@@ -8,7 +9,7 @@ class App extends Component {
       query: "",
       result: "",
     };
-    this.recognizer = new Recognizer();
+    this.recognizer = new Parser();
   }
 
   handleChange = (event) => {
