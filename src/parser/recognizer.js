@@ -1,4 +1,6 @@
 // TODO: overhaul error throwing
+// TODO: cleanup primary condition and keyword rules
+import { toHaveFocus } from "@testing-library/jest-dom/dist/matchers";
 import lexer from "./lexer";
 
 class Recognizer {
@@ -36,14 +38,14 @@ class Recognizer {
   }
 
   get() {
-    this.primarycondition();
+    this.primaryconditions();
     this.secondaryconditions();
   }
 
   add() {
     this.term();
     this.lexer.consume("from");
-    this.primarycondition();
+    this.primaryconditions();
     this.secondaryconditions();
   }
 
@@ -73,30 +75,111 @@ class Recognizer {
     }
   }
 
-  primarycondition() {
-    this.primarykeyword();
-    this.lexer.consume(":");
-    this.primaryconditionRHS();
+  primaryconditions() {
+    this.primarycondition();
     while (this.lexer.inspect("union")) {
       this.lexer.consume("union");
-      this.primarykeyword();
-      this.lexer.consume(":");
-      this.primaryconditionRHS();
+      this.primarycondition();
     }
   }
 
-  primarykeyword() {
+  primarycondition() {
+    if (this.lexer.inspect("artist")) {
+      this.artistPrimary();
+    } else if (this.lexer.inspect("album")) {
+      this.albumPrimary();
+    } else if (this.lexer.inspect("track")) {
+      this.trackPrimary();
+    } else if (this.lexer.inspect("playlist")) {
+      this.playlistPrimary();
+    } else {
+      throw new Error("Invalid primary condition");
+    }
+  }
+
+  artistPrimary() {
+    this.lexer.consume("artist");
+    this.lexer.consume(":");
+    this.primaryconditionRHS();
+  }
+
+  albumPrimary() {
+    this.lexer.consume("album");
+    this.lexer.consume(":");
+    this.albumRHS();
+  }
+
+  albumRHS() {
+    if (this.lexer.inspectTerm()) {
+      this.albumTerm();
+    } else if (this.lexer.inspect("[")) {
+      this.lexer.consume("[");
+      this.albumTerms();
+      this.lexer.consume("]");
+    }
+  }
+
+  albumTerms() {
+    this.albumTerm();
+    while (this.lexer.inspect(",")) {
+      this.lexer.consume(",");
+      this.albumTerm();
+    }
+  }
+
+  albumTerm() {
+    this.term();
+    this.lexer.consume("-");
+    this.lexer.consume("artist");
+    this.lexer.consume(":");
+    this.term();
+  }
+
+  trackPrimary() {
+    this.lexer.consume("track");
+    this.lexer.consume(":");
+  }
+
+  trackRHS() {
+    if (this.lexer.inspectTerm()) {
+      this.trackTerm();
+    } else if (this.lexer.inspect("[")) {
+      this.lexer.consume("[");
+      this.trackTerms();
+      this.lexer.consume("]");
+    }
+  }
+
+  trackTerms() {
+    this.trackTerm();
+    while (this.lexer.inspect(",")) {
+      this.lexer.consume(",");
+      this.trackTerm();
+    }
+  }
+
+  trackTerm() {
+    this.term();
+    this.lexer.consume("-");
+    this.trackTermRHS();
+  }
+
+  trackTermRHS() {
     if (this.lexer.inspect("artist")) {
       this.lexer.consume("artist");
+      this.lexer.consume(":");
+      this.term();
     } else if (this.lexer.inspect("album")) {
       this.lexer.consume("album");
-    } else if (this.lexer.inspect("track")) {
-      this.lexer.consume("track");
-    } else if (this.lexer.inspect("playlist")) {
-      this.lexer.consume("playlist");
-    } else {
-      throw new Error("Invalid primary condition LHS");
+      this.lexer.consume(":");
+      this.term();
     }
+  }
+
+  playlistPrimary() {
+    this.lexer.consume("playlist");
+    this.lexer.consume(":");
+    this.primaryconditionRHS();
   }
 
   primaryconditionRHS() {

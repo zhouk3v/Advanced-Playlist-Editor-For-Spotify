@@ -12,7 +12,9 @@ it("handles simple get query", () => {
 });
 
 it("handles simple add to query", () => {
-  recognizer.parseInput(`add to "My Playlist" from album:"Mutter"`);
+  recognizer.parseInput(
+    `add to "My Playlist" from album:"Mutter" - aritst:"Rammstein"`
+  );
 });
 
 it("handles delete tracks query", () => {
@@ -35,22 +37,31 @@ it("handle delete playlist query", () => {
 
 it("handles primary conditions with different keywords", () => {
   recognizer.parseInput(`get artist:"Rammstein"`);
-  recognizer.parseInput(`get album:"Mutter"`);
-  recognizer.parseInput(`get track:"Mein Herz Brennt"`);
+  recognizer.parseInput(`get album:"Mutter"-artist:"Rammstein"`);
+  recognizer.parseInput(`get track:"Mein Herz Brennt"-artist:"Rammstein"`);
+  recognizer.parseInput(`get track:"Mein Herz Brennt"-album:"Mutter`);
   recognizer.parseInput(`get playlist:"My playlist"`);
 });
 
 it("handles primary conditions with multiple entrys", () => {
   recognizer.parseInput(`get artist:["Rammstein","Daft Punk"]`);
+  recognizer.parseInput(
+    `get album:["Mutter"-artist:"Rammstein","Discovery"-artist:"Daft Punk","Hybrid Theory"-artist:"Linkin Park"]`
+  );
+  recognizer.parseInput(
+    `get track:["Mutter"-artist:"Rammstein","Harder Better Faster Stronger"-album:"Discovery"]`
+  );
 });
 
 it("handles primary conditions with unions", () => {
-  recognizer.parseInput(`get artist:"Rammstein" union album:"Discovery"`);
   recognizer.parseInput(
-    `get artist:"Rammstein" union album:["Discovery", "Alive 2007"]`
+    `get artist:"Rammstein" union album:"Discovery"-artist:"Daft Punk"`
   );
   recognizer.parseInput(
-    `get artist:"Rammstein" union album:["Discovery", "Alive 2007"] union track:"Wonderwall"`
+    `get artist:"Rammstein" union album:["Discovery"-artist:"Daft Punk", "Alive 2007"-artist:"Daft Punk"]`
+  );
+  recognizer.parseInput(
+    `get artist:"Rammstein" union album:["Discovery"-artist:"Daft Punk", "Alive 2007"-artist:"Daft Punk"] union track:"Wonderwall"-artist:"Oasis"`
   );
 });
 

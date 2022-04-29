@@ -1,8 +1,8 @@
 // TODO: overhaul error throwing
 class lexer {
   constructor() {
-    this.bracketChars = new Set(["(", ")", ",", "[", "]"]);
-    this.assignChars = new Set([":", "="]);
+    this.setChars = new Set(["(", ")", ",", "[", "]"]);
+    this.assignChars = new Set([":", "=", "-"]);
   }
 
   tokenize(input) {
@@ -29,7 +29,7 @@ class lexer {
         }
         this.tokens.push(token);
         token = "";
-      } else if (this.bracketChars.has(input[i]) || input[i] === ",") {
+      } else if (this.setChars.has(input[i])) {
         this.tokens.push(input[i]);
         token = "";
       } else if (this.assignChars.has(input[i])) {
