@@ -6,6 +6,7 @@ class lexer {
   }
 
   tokenize(input) {
+    // TODO: refactor this
     const inputLength = input.length;
     this.tokens = [];
     this.index = 0;
@@ -33,7 +34,9 @@ class lexer {
         this.tokens.push(input[i]);
         token = "";
       } else if (this.assignChars.has(input[i])) {
-        this.tokens.push(token);
+        if (token !== "") {
+          this.tokens.push(token);
+        }
         this.tokens.push(input[i]);
         token = "";
       } else {
@@ -41,6 +44,7 @@ class lexer {
       }
       i++;
     }
+    console.log(this.tokens);
   }
 
   inspect(toInspect) {
