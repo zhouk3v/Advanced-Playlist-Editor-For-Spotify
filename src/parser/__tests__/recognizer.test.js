@@ -39,7 +39,7 @@ it("handles primary conditions with different keywords", () => {
   recognizer.parseInput(`get artist:"Rammstein"`);
   recognizer.parseInput(`get album:"Mutter"-artist:"Rammstein"`);
   recognizer.parseInput(`get track:"Mein Herz Brennt"-artist:"Rammstein"`);
-  recognizer.parseInput(`get track:"Mein Herz Brennt"-album:"Mutter`);
+  recognizer.parseInput(`get track:"Mein Herz Brennt"-album:"Mutter"`);
   recognizer.parseInput(`get playlist:"My playlist"`);
 });
 

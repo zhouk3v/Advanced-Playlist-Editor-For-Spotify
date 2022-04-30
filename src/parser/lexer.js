@@ -77,7 +77,7 @@ class lexer {
 
   consumeEOF() {
     if (!this._inspectEOF()) {
-      throw new Error(`Expected: EOF`);
+      throw new Error(`Expected: EOF, found: ${this.tokens[this.index]}`);
     }
     return;
   }

@@ -1,6 +1,5 @@
 // TODO: overhaul error throwing
 // TODO: cleanup primary condition and keyword rules
-import { toHaveFocus } from "@testing-library/jest-dom/dist/matchers";
 import lexer from "./lexer";
 
 class Recognizer {
@@ -138,6 +137,7 @@ class Recognizer {
   trackPrimary() {
     this.lexer.consume("track");
     this.lexer.consume(":");
+    this.trackRHS();
   }
 
   trackRHS() {
