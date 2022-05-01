@@ -12,6 +12,10 @@ class Recognizer {
     this.query();
   }
 
+  //
+  // query rules
+  //
+
   query() {
     if (this.lexer.inspect("get")) {
       this.lexer.consume("get");
@@ -74,6 +78,10 @@ class Recognizer {
     }
   }
 
+  //
+  // Primary condition rules
+  //
+
   primaryconditions() {
     this.primarycondition();
     while (this.lexer.inspect("union")) {
@@ -84,31 +92,29 @@ class Recognizer {
 
   primarycondition() {
     if (this.lexer.inspect("artist")) {
+      this.lexer.consume("artist");
+      this.lexer.consume(":");
       this.artistPrimary();
     } else if (this.lexer.inspect("album")) {
+      this.lexer.consume("album");
+      this.lexer.consume(":");
       this.albumPrimary();
     } else if (this.lexer.inspect("track")) {
+      this.lexer.consume("track");
+      this.lexer.consume(":");
       this.trackPrimary();
     } else if (this.lexer.inspect("playlist")) {
+      this.lexer.consume("playlist");
+      this.lexer.consume(":");
       this.playlistPrimary();
     } else {
       throw new Error("Invalid primary condition");
     }
   }
 
-  artistPrimary() {
-    this.lexer.consume("artist");
-    this.lexer.consume(":");
-    this.primaryconditionRHS();
-  }
+  // primary condition - album rules
 
   albumPrimary() {
-    this.lexer.consume("album");
-    this.lexer.consume(":");
-    this.albumRHS();
-  }
-
-  albumRHS() {
     if (this.lexer.inspectTerm()) {
       this.albumTerm();
     } else if (this.lexer.inspect("[")) {
@@ -134,13 +140,33 @@ class Recognizer {
     this.term();
   }
 
-  trackPrimary() {
-    this.lexer.consume("track");
-    this.lexer.consume(":");
-    this.trackRHS();
+  // primary condition - artist rules
+
+  artistPrimary() {
+    if (this.lexer.inspectTerm()) {
+      this.term();
+    } else if (this.lexer.inspect("[")) {
+      this.lexer.consume("[");
+      this.terms();
+      this.lexer.consume("]");
+    }
   }
 
-  trackRHS() {
+  // primary condition - playlist rules
+
+  playlistPrimary() {
+    if (this.lexer.inspectTerm()) {
+      this.term();
+    } else if (this.lexer.inspect("[")) {
+      this.lexer.consume("[");
+      this.terms();
+      this.lexer.consume("]");
+    }
+  }
+
+  // primary conditon - track rules
+
+  trackPrimary() {
     if (this.lexer.inspectTerm()) {
       this.trackTerm();
     } else if (this.lexer.inspect("[")) {
@@ -176,23 +202,9 @@ class Recognizer {
     }
   }
 
-  playlistPrimary() {
-    this.lexer.consume("playlist");
-    this.lexer.consume(":");
-    this.primaryconditionRHS();
-  }
-
-  primaryconditionRHS() {
-    if (this.lexer.inspectTerm()) {
-      this.term();
-    } else if (this.lexer.inspect("[")) {
-      this.lexer.consume("[");
-      this.terms();
-      this.lexer.consume("]");
-    } else {
-      throw new Error("Invalid primary condition RHS");
-    }
-  }
+  //
+  // secondary condition rules
+  //
 
   secondaryconditions() {
     if (this.lexer.inspect("where")) {
@@ -200,6 +212,8 @@ class Recognizer {
       this.orTerm();
     }
   }
+
+  // Secondary conditions - boolean operators
 
   orTerm() {
     this.andTerm();
@@ -229,6 +243,8 @@ class Recognizer {
       this.condition();
     }
   }
+
+  // Secondary condition - base conditions
 
   condition() {
     this.keyword();
