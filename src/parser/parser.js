@@ -10,7 +10,7 @@ import deletetrack from "./AST/DeleteTrack";
 import get from "./AST/Get";
 import notExpr from "./AST/NotExpr";
 import orExpr from "./AST/OrExpr";
-import primarycondition from "./AST/PrimaryCondition";
+import primaryconditions from "./AST/PrimaryConditions";
 import search from "./AST/Search";
 import secondaryconditions from "./AST/SecondaryCondition";
 
@@ -23,6 +23,10 @@ class Recognizer {
     this.lexer.tokenize(input);
     return this.query();
   }
+
+  //
+  // query rules
+  //
 
   query() {
     let query;
@@ -48,12 +52,11 @@ class Recognizer {
     }
     this.lexer.consumeEOF();
     console.log(query);
-    console.log(query.toString());
     return query;
   }
 
   get() {
-    const primary = this.primarycondition();
+    const primary = this.primaryconditions();
     const secondary = this.secondaryconditions();
     return new get(primary, secondary);
   }
@@ -61,7 +64,7 @@ class Recognizer {
   add() {
     const playlist = this.term();
     this.lexer.consume("from");
-    const primary = this.primarycondition();
+    const primary = this.primaryconditions();
     const secondary = this.secondaryconditions();
     return new add(playlist, primary, secondary);
   }
@@ -96,51 +99,203 @@ class Recognizer {
     }
   }
 
-  primarycondition() {
-    const primary = new primarycondition();
-    const keyword = this.primarykeyword();
-    this.lexer.consume(":");
-    const terms = this.primaryconditionRHS();
-    primary.addCondition(keyword, terms);
+  //
+  // Primary condition rules
+  //
+
+  primaryconditions() {
+    const primary = new primaryconditions();
+    primary.addConditions(this.primarycondition());
     while (this.lexer.inspect("union")) {
       this.lexer.consume("union");
-      const unionKeyword = this.primarykeyword();
-      this.lexer.consume(":");
-      const unionTerms = this.primaryconditionRHS();
-      primary.addCondition(unionKeyword, unionTerms);
+      primary.addConditions(this.primarycondition());
     }
     return primary;
   }
 
-  primarykeyword() {
+  primarycondition() {
     if (this.lexer.inspect("artist")) {
-      return this.lexer.consume("artist");
+      this.lexer.consume("artist");
+      this.lexer.consume(":");
+      return this.artistPrimary();
     } else if (this.lexer.inspect("album")) {
-      return this.lexer.consume("album");
+      this.lexer.consume("album");
+      this.lexer.consume(":");
+      return this.albumPrimary();
     } else if (this.lexer.inspect("track")) {
-      return this.lexer.consume("track");
+      this.lexer.consume("track");
+      this.lexer.consume(":");
+      return this.trackPrimary();
     } else if (this.lexer.inspect("playlist")) {
-      return this.lexer.consume("playlist");
+      this.lexer.consume("playlist");
+      this.lexer.consume(":");
+      return this.playlistPrimary();
     } else {
-      throw new Error("Invalid primary condition LHS");
+      throw new Error("Invalid primary condition");
     }
   }
 
-  primaryconditionRHS() {
-    let terms = [];
+  // primary condition - album rules
+
+  albumPrimary() {
+    const albumObjs = [];
     if (this.lexer.inspectTerm()) {
-      const term = this.term();
-      terms.push(term);
+      const album = this.albumTerm();
+      albumObjs.push({
+        type: "album",
+        ...album,
+      });
     } else if (this.lexer.inspect("[")) {
       this.lexer.consume("[");
-      const toAppend = this.terms();
-      terms = terms.concat(toAppend);
+      const albums = this.albumTerms();
+      albums.forEach((album) => {
+        albumObjs.push({
+          type: "album",
+          ...album,
+        });
+      });
       this.lexer.consume("]");
-    } else {
-      throw new Error("Invalid primary condition RHS");
+    }
+    return albumObjs;
+  }
+
+  albumTerms() {
+    const terms = [];
+    terms.push(this.albumTerm());
+    while (this.lexer.inspect(",")) {
+      this.lexer.consume(",");
+      terms.push(this.albumTerm());
     }
     return terms;
   }
+
+  albumTerm() {
+    const name = this.term();
+    this.lexer.consume("-");
+    this.lexer.consume("artist");
+    this.lexer.consume(":");
+    const artist = this.term();
+    return {
+      name,
+      artist,
+    };
+  }
+
+  // primary condition - artist rules
+
+  artistPrimary() {
+    const artistObjs = [];
+    if (this.lexer.inspectTerm()) {
+      const artist = this.term();
+      artistObjs.push({
+        type: "artist",
+        name: artist,
+      });
+    } else if (this.lexer.inspect("[")) {
+      this.lexer.consume("[");
+      const artists = this.terms();
+      artists.forEach((artist) => {
+        artistObjs.push({
+          type: "artist",
+          name: artist,
+        });
+      });
+      this.lexer.consume("]");
+    }
+    return artistObjs;
+  }
+
+  // primary condition - playlist rules
+
+  playlistPrimary() {
+    const playlistObjs = [];
+    if (this.lexer.inspectTerm()) {
+      const playlist = this.term();
+      playlistObjs.push({
+        type: "playlist",
+        name: playlist,
+      });
+    } else if (this.lexer.inspect("[")) {
+      this.lexer.consume("[");
+      const playlists = this.terms();
+      playlists.forEach((playlist) => {
+        playlistObjs.push({
+          type: "playlist",
+          name: playlist,
+        });
+      });
+      this.lexer.consume("]");
+    }
+    return playlistObjs;
+  }
+
+  // primary conditon - track rules
+
+  trackPrimary() {
+    const trackObjs = [];
+    if (this.lexer.inspectTerm()) {
+      const track = this.trackTerm();
+      trackObjs.push({
+        type: "track",
+        ...track,
+      });
+    } else if (this.lexer.inspect("[")) {
+      this.lexer.consume("[");
+      const tracks = this.trackTerms();
+      tracks.forEach((track) => {
+        trackObjs.push({
+          type: "track",
+          ...track,
+        });
+      });
+      this.lexer.consume("]");
+    }
+    return trackObjs;
+  }
+
+  trackTerms() {
+    const terms = [];
+    terms.push(this.trackTerm());
+    while (this.lexer.inspect(",")) {
+      this.lexer.consume(",");
+      terms.push(this.trackTerm());
+    }
+    return terms;
+  }
+
+  trackTerm() {
+    const name = this.term();
+    this.lexer.consume("-");
+    const trackProps = this.trackTermRHS();
+    return {
+      name,
+      ...trackProps,
+    };
+  }
+
+  trackTermRHS() {
+    if (this.lexer.inspect("artist")) {
+      this.lexer.consume("artist");
+      this.lexer.consume(":");
+      const artist = this.term();
+      return {
+        trackfilter: "artist",
+        filter: artist,
+      };
+    } else if (this.lexer.inspect("album")) {
+      this.lexer.consume("album");
+      this.lexer.consume(":");
+      const album = this.term();
+      return {
+        trackfilter: "album",
+        filter: album,
+      };
+    }
+  }
+
+  //
+  // secondary condition rules
+  //
 
   secondaryconditions() {
     if (this.lexer.inspect("where")) {
@@ -151,6 +306,8 @@ class Recognizer {
       return null;
     }
   }
+
+  // Secondary conditions - boolean operators
 
   orTerm() {
     let expr = this.andTerm();
@@ -183,6 +340,8 @@ class Recognizer {
       return this.condition();
     }
   }
+
+  // Secondary condition - base conditions
 
   condition() {
     const keyword = this.keyword();

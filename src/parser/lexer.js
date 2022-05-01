@@ -44,7 +44,6 @@ class lexer {
       }
       i++;
     }
-    console.log(this.tokens);
   }
 
   inspect(toInspect) {
