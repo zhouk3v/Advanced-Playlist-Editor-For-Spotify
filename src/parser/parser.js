@@ -51,7 +51,6 @@ class Recognizer {
       throw new Error("Invalid query");
     }
     this.lexer.consumeEOF();
-    console.log(query);
     return query;
   }
 

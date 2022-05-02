@@ -21,7 +21,8 @@ class App extends Component {
 
     this.setState({ result: this.state.query });
 
-    this.recognizer.parseInput(this.state.query);
+    const query = this.recognizer.parseInput(this.state.query);
+    console.log(query);
   };
 
   render() {

@@ -113,7 +113,7 @@ it("handles all types of secondary conditions RHS", () => {
 // Advanced queries
 it("handles an advanced query", () => {
   recognizer.parseInput(
-    `get artist:["Rammstein", "Daft Punk", "Oasis"] union album:"Discovery"-artist:"Daft Punk" union album:["Hybrid Theory"-artist:"Linkin Park","Meteora"-artist:"Linkin Park","Minutes to Midnight"-artist:"Linkin Park"] union track:"Take on Me"-artist:"a-ha" where (not (album like "/live/" or album in ("Discovery", "Homework")) and track="touch") or (album in ("Discovery", "Homework")) and track="Mann Gegen Mann"`
+    `get artist:"Sabaton" union artist:["Rammstein", "Daft Punk", "Oasis"] union album:"Discovery"-artist:"Daft Punk" union album:["Hybrid Theory"-artist:"Linkin Park","Meteora"-artist:"Linkin Park","Minutes to Midnight"-artist:"Linkin Park"] union track:"Take on Me"-artist:"a-ha" where (not (album like "/live/" or album in ("Discovery", "Homework")) and track="touch") or (album in ("Discovery", "Homework")) and track="Mann Gegen Mann"`
   );
 });
 
