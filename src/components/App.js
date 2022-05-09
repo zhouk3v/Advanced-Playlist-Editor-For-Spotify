@@ -48,11 +48,11 @@ const App = () => {
   const [isRedirect, setIsRedirect] = useState(false);
 
   useEffect(() => {
-    const generateNewToken = (code) => {
+    const generateNewToken = async (code) => {
       // Grab the code verifier from session storage
       const codeVerifier = sessionStorage.getItem("codeVerifier");
       // Send a POST request with the code to get an access token, refresh token and
-      fetch("https://accounts.spotify.com/api/token", {
+      const res = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -64,16 +64,12 @@ const App = () => {
           redirect_uri: redirectUri,
           code_verifier: codeVerifier,
         }),
-      })
-        .then((res) => {
-          return res.json();
-        })
-        .then((json) => {
-          storeToken(json);
-          // Clear the url search params
-          window.location.search = "";
-          setToken(json.access_token);
-        });
+      });
+      const json = await res.json();
+      storeToken(json);
+      // Clear the url search params
+      window.location.search = "";
+      setToken(json.access_token);
     };
 
     const generateRefreshToken = async () => {
