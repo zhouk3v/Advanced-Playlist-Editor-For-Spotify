@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Parser from "../parser/parser";
 
-const Editor = () => {
+const Editor = ({ token }) => {
   const [query, setQuery] = useState("");
   const [result, setResult] = useState("");
 
@@ -22,6 +22,7 @@ const Editor = () => {
 
   return (
     <div>
+      <div>Token: {token}</div>
       <form onSubmit={handleSubmit}>
         <textarea onChange={handleChange} />
         <div>
