@@ -70,13 +70,12 @@ const App = () => {
         .then((json) => {
           storeToken(json);
           setToken(json.access_token);
+          // Clear the url search params
+          window.location.search = "";
         });
     };
-    console.log("useEffect called!");
     const tokenExists = localStorage.getItem("accesstoken");
-    console.log(tokenExists);
     if (!tokenExists) {
-      console.log("token does not exist");
       // Get the search parameters, if any from the url
       const params = new URL(window.location).searchParams;
       const code = params.get("code");
@@ -99,7 +98,6 @@ const App = () => {
         setCodeChallenge(base64Encode(sha256(codeVerifier)));
       }
     } else {
-      console.log("token exists!");
       setToken(localStorage.getItem("accesstoken"));
     }
   }, [token, validState]);
@@ -107,7 +105,7 @@ const App = () => {
   return (
     <div>
       {!validState && <p>ERROR: received invalid state from Spotify API</p>}
-      {!token && (
+      {!token && validState && (
         <a
           href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
             "%20"
@@ -116,7 +114,7 @@ const App = () => {
           Login to Spotify
         </a>
       )}
-      {token && <Editor token={token} />}
+      {token && validState && <Editor token={token} logout={logout} />}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Parser from "../parser/parser";
 
-const Editor = ({ token }) => {
+const Editor = ({ token, logout }) => {
   const [query, setQuery] = useState("");
   const [result, setResult] = useState("");
 
@@ -22,6 +22,7 @@ const Editor = ({ token }) => {
 
   return (
     <div>
+      <button onClick={logout}>Logout</button>
       <div>Token: {token}</div>
       <form onSubmit={handleSubmit}>
         <textarea onChange={handleChange} />
