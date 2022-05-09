@@ -45,6 +45,7 @@ const App = () => {
   const [validState, setValidState] = useState(true);
   const [codeChallenge, setCodeChallenge] = useState(null);
   const [urlState, setUrlState] = useState(null);
+  const [isRedirect, setIsRedirect] = useState(false);
 
   useEffect(() => {
     const generateNewToken = (code) => {
@@ -69,11 +70,30 @@ const App = () => {
         })
         .then((json) => {
           storeToken(json);
-          setToken(json.access_token);
           // Clear the url search params
           window.location.search = "";
+          setToken(json.access_token);
         });
     };
+
+    const generateRefreshToken = async () => {
+      const refresh_token = localStorage.getItem("refreshtoken");
+      const res = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          client_id: clientId,
+          grant_type: "refresh_token",
+          refresh_token,
+        }),
+      });
+      const json = await res.json();
+      storeToken(json);
+      setToken(json.access_token);
+    };
+
     const tokenExists = localStorage.getItem("accesstoken");
     if (!tokenExists) {
       // Get the search parameters, if any from the url
@@ -86,6 +106,7 @@ const App = () => {
         const savedState = sessionStorage.getItem("state");
         setValidState(urlState === savedState);
         if (validState) {
+          setIsRedirect(true);
           generateNewToken(code);
         }
       } else {
@@ -98,14 +119,23 @@ const App = () => {
         setCodeChallenge(base64Encode(sha256(codeVerifier)));
       }
     } else {
-      setToken(localStorage.getItem("accesstoken"));
+      // Check if our token has expired
+      const tokenObtainTime = parseInt(localStorage.getItem("tokenObtainTime"));
+      const expires_in_sec = parseInt(localStorage.getItem("expiresin")) * 1000;
+      if (Date.now() > tokenObtainTime + expires_in_sec) {
+        console.log("Token expired");
+        generateRefreshToken();
+      } else {
+        setToken(localStorage.getItem("accesstoken"));
+      }
     }
   }, [token, validState]);
 
   return (
     <div>
       {!validState && <p>ERROR: received invalid state from Spotify API</p>}
-      {!token && validState && (
+      {validState && !token && isRedirect && <p>Loading</p>}
+      {validState && !token && !isRedirect && (
         <a
           href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
             "%20"
@@ -114,7 +144,7 @@ const App = () => {
           Login to Spotify
         </a>
       )}
-      {token && validState && <Editor token={token} logout={logout} />}
+      {validState && token && <Editor token={token} logout={logout} />}
     </div>
   );
 };
