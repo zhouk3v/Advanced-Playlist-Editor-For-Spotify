@@ -9,7 +9,7 @@ class Get {
     }`;
   }
   execute() {
-    
+    const tracks = this.primary.getTracks();
   }
 }
 

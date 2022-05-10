@@ -1,9 +1,16 @@
+import {
+  getTracksFromArtist,
+  getTracksFromAlbum,
+  getTracksFromPlaylist,
+  getTrack,
+} from "../../API/fetchTracks";
+
 class PrimaryConditions {
   constructor() {
-    this.artist = [];
-    this.album = [];
-    this.track = [];
-    this.playlist = [];
+    this.artists = [];
+    this.albums = [];
+    this.tracks = [];
+    this.playlists = [];
   }
 
   addConditions(conditions) {
@@ -15,23 +22,23 @@ class PrimaryConditions {
   addCondition(condition) {
     switch (condition.type) {
       case "artist":
-        this.artist.push(condition.name);
+        this.artists.push(condition.name);
         break;
       case "album":
-        this.album.push({
+        this.albums.push({
           name: condition.name,
           artist: condition.artist,
         });
         break;
       case "track":
-        this.track.push({
+        this.tracks.push({
           name: condition.name,
           trackfilter: condition.trackfilter,
           filter: condition.filter,
         });
         break;
       case "playlist":
-        this.playlist.push(condition.name);
+        this.playlists.push(condition.name);
         break;
       default:
         throw new Error("Invalid Keyword");
@@ -40,7 +47,12 @@ class PrimaryConditions {
   // TODO: Implement to string function
   toString() {}
 
-  getTracks() {}
+  getTracks() {
+    const promises = [];
+    this.artists.forEach((artist) => {
+      getTracksFromArtist(artist);
+    });
+  }
 }
 
 export default PrimaryConditions;
