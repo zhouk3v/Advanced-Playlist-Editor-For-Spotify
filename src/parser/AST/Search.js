@@ -6,6 +6,7 @@ class Search {
   toString() {
     return `search ${this.keyword.toString()} ${this.term.toString()}`;
   }
+  execute() {}
 }
 
 export default Search;

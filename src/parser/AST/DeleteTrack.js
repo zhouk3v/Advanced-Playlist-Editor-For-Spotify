@@ -8,6 +8,7 @@ class DeleteTrack {
       this.secondary ? this.secondary.toString() : ""
     }`;
   }
+  execute() {}
 }
 
 export default DeleteTrack;

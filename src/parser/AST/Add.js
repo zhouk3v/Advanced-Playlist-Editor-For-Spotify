@@ -9,6 +9,7 @@ class Add {
       this.secondary ? this.secondary.toString() : ""
     }`;
   }
+  execute() {}
 }
 
 export default Add;

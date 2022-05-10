@@ -1,4 +1,4 @@
-import { EQUALS_CONDITION, IN_CONDITION, REGEX_CONDITION } from "../config";
+import { EQUALS_CONDITION, IN_CONDITION, REGEX_CONDITION } from "../../config";
 
 class BaseCondition {
   constructor(keyword, rhs) {
@@ -18,6 +18,9 @@ class BaseCondition {
       default:
         return `THIS SHOULD NOT APPEAR`;
     }
+  }
+  evaluate(track) {
+    
   }
 }
 

@@ -8,6 +8,9 @@ class Get {
       this.secondary ? this.secondary.toString() : ""
     }`;
   }
+  execute() {
+    
+  }
 }
 
 export default Get;

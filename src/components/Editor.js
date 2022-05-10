@@ -17,7 +17,6 @@ const Editor = ({ token, logout }) => {
     setResult(query);
 
     const queryResult = parser.parseInput(query);
-    console.log(queryResult);
   };
 
   return (

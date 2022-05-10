@@ -6,6 +6,9 @@ class AndExpr {
   toString() {
     return `(${this.expr1.toString()} and ${this.expr2.toString()})`;
   }
+  evaluate(track) {
+    return this.expr1.evaluate(track) && this.expr2.evaluate(track);
+  }
 }
 
 export default AndExpr;

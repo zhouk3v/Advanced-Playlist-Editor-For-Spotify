@@ -5,6 +5,9 @@ class Create {
   toString() {
     return `create playlist ${this.term.toString()}`;
   }
+  execute() {
+    
+  }
 }
 
 export default Create;

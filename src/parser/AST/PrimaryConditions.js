@@ -37,7 +37,10 @@ class PrimaryConditions {
         throw new Error("Invalid Keyword");
     }
   }
+  // TODO: Implement to string function
   toString() {}
+
+  getTracks() {}
 }
 
 export default PrimaryConditions;

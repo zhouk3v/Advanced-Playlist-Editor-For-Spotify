@@ -5,6 +5,9 @@ class DeletePlaylist {
   toString() {
     return `delete playlist ${this.term.toString()}`;
   }
+  execute() {
+    
+  }
 }
 
 export default DeletePlaylist;
