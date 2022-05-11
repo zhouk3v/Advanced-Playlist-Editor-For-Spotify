@@ -33,7 +33,7 @@ class PrimaryConditions {
       case "track":
         this.tracks.push({
           name: condition.name,
-          trackfilter: condition.trackfilter,
+          filterType: condition.filterType,
           filter: condition.filter,
         });
         break;
@@ -52,7 +52,12 @@ class PrimaryConditions {
     this.artists.forEach((artist) => {
       promises.push(getTracksFromArtist(artist));
     });
-    getTracksFromAlbums(this.albums);
+    if (this.albums.length > 0) {
+      promises.push(getTracksFromAlbums(this.albums));
+    }
+    this.tracks.forEach((track) => {
+      promises.push(getTrack(track));
+    });
   }
 }
 

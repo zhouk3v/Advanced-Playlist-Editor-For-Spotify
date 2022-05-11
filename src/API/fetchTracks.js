@@ -1,3 +1,5 @@
+//TODO: relax case sensitive when checking names
+
 const callAPI = async (url) => {
   const token = localStorage.getItem("accesstoken");
   const res = await fetch(url, {
@@ -68,6 +70,7 @@ export const getTracksFromAlbums = async (albums) => {
     searchUrl.search = new URLSearchParams({
       q: `${album.name} artist:${album.artist}`,
       type: "album",
+      limit: 50,
     });
     const searchResults = await callAPI(searchUrl);
     // Search the results with the matching name and artist (it is not a guarantee that the desired album is the first result, but it should be in the first 50)
@@ -95,4 +98,22 @@ export const getTracksFromAlbums = async (albums) => {
 
 export const getTracksFromPlaylist = async (playlist) => {};
 
-export const getTrack = async (track, filterType, filter) => {};
+export const getTrack = async (track) => {
+  const searchUrl = new URL("https://api.spotify.com/v1/search");
+  searchUrl.search = new URLSearchParams({
+    q: `${track.name} ${track.filterType}:${track.filter}`,
+    type: "track",
+    limit: 50,
+  });
+  const searchResults = await callAPI(searchUrl);
+  console.log(searchResults.tracks.items);
+  const found = searchResults.tracks.items.find((curr) => {
+    if (track.filterType === "artist") {
+      return curr.name === track.name;
+    } else {
+      return curr.name === track.name && curr.album.name === track.filter;
+    }
+  });
+  console.log(found);
+  return found;
+};

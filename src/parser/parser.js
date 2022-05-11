@@ -278,7 +278,7 @@ class Recognizer {
       this.lexer.consume(":");
       const artist = this.term();
       return {
-        trackfilter: "artist",
+        filterType: "artist",
         filter: artist,
       };
     } else if (this.lexer.inspect("album")) {
@@ -286,7 +286,7 @@ class Recognizer {
       this.lexer.consume(":");
       const album = this.term();
       return {
-        trackfilter: "album",
+        filterType: "album",
         filter: album,
       };
     }
