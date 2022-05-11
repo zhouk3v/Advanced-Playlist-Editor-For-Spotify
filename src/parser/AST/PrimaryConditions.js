@@ -47,11 +47,12 @@ class PrimaryConditions {
   // TODO: Implement to string function
   toString() {}
 
-  getTracks() {
+  async getTracks() {
     const promises = [];
     this.artists.forEach((artist) => {
-      getTracksFromArtist(artist);
+      promises.push(getTracksFromArtist(artist));
     });
+    console.log(promises);
   }
 }
 

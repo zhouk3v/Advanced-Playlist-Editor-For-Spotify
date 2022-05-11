@@ -1,7 +1,7 @@
-export const getTracksFromArtist = async (artist) => {
-  const token = localStorage.getItem("accesstoken");
-  const tracks = [];
+const token = localStorage.getItem("accesstoken");
 
+export const getTracksFromArtist = async (artist) => {
+  const tracks = [];
   // Search for the artist by name in the api
   const searchUrl = new URL("https://api.spotify.com/v1/search");
   searchUrl.search = new URLSearchParams({ q: artist, type: "artist" });
@@ -27,7 +27,9 @@ export const getTracksFromArtist = async (artist) => {
   let artistAlbumsUrl = new URL(
     `https://api.spotify.com/v1/artists/${artistId}/albums?include_groups=album,single`
   );
+  // Fetch the artist's albums, 20 albums at a time (since this is the max limit to the get several albums endpoint)
   do {
+    // Fetch the first page of the artist's album
     const albumIds = [];
     const artistAlbums = await fetch(artistAlbumsUrl, {
       method: "GET",
@@ -37,6 +39,7 @@ export const getTracksFromArtist = async (artist) => {
       },
     });
     const artistAlbumsJson = await artistAlbums.json();
+    // Grab the album ids for use in later API calls
     artistAlbumsJson.items.forEach((album) => {
       albumIds.push(album.id);
     });
@@ -52,6 +55,7 @@ export const getTracksFromArtist = async (artist) => {
       },
     });
     const getSeveralAlbumsJSON = await getSeveralAlbumsResponse.json();
+    // Go through each album, grab all the tracks from each album
     getSeveralAlbumsJSON.albums.forEach((album) => {
       album.tracks.items.forEach((track) =>
         tracks.push({ ...track, album: album })
@@ -63,7 +67,10 @@ export const getTracksFromArtist = async (artist) => {
   return tracks;
 };
 
-export const getTracksFromAlbum = async (album, artist) => {};
+export const getTracksFromAlbum = async (albums) => {
+  const tracks = [];
+  // search for the album by name and artist
+};
 
 export const getTracksFromPlaylist = async (playlist) => {};
 

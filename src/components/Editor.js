@@ -11,13 +11,13 @@ const Editor = ({ token, logout }) => {
     setQuery(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     setResult(query);
 
     const queryResult = parser.parseInput(query);
-    queryResult.execute();
+    await queryResult.execute();
   };
 
   return (

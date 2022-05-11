@@ -8,7 +8,7 @@ class Get {
       this.secondary ? this.secondary.toString() : ""
     }`;
   }
-  execute() {
+  async execute() {
     const tracks = this.primary.getTracks();
   }
 }
