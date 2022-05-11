@@ -1,6 +1,6 @@
 import {
   getTracksFromArtist,
-  getTracksFromAlbum,
+  getTracksFromAlbums,
   getTracksFromPlaylist,
   getTrack,
 } from "../../API/fetchTracks";
@@ -52,7 +52,7 @@ class PrimaryConditions {
     this.artists.forEach((artist) => {
       promises.push(getTracksFromArtist(artist));
     });
-    console.log(promises);
+    getTracksFromAlbums(this.albums);
   }
 }
 
