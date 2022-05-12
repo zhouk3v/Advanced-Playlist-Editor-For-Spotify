@@ -16,11 +16,58 @@ class BaseCondition {
       case REGEX_CONDITION:
         return `${this.keyword} like ${this.term}`;
       default:
-        return `THIS SHOULD NOT APPEAR`;
+        throw new Error("Invalid base condition");
     }
   }
   evaluate(track) {
-    
+    switch (this.type) {
+      case EQUALS_CONDITION:
+        return this._evaluateEquals(track);
+      case IN_CONDITION:
+        return true;
+      case REGEX_CONDITION:
+        return true;
+      default:
+        throw new Error("Invalid base condition");
+    }
+  }
+  _evaluateEquals(track) {
+    switch (this.keyword) {
+      case "artist":
+        return track.artists.find((artist) => artist.name === this.term);
+      case "album":
+        return track.album.name === this.term;
+      case "track":
+        return track.name === this.term;
+      default:
+        return false;
+    }
+  }
+  _evaluateIn(track) {
+    const termSet = new Set(this.term);
+    switch (this.keyword) {
+      case "artist":
+        return track.artists.find((artist) => termSet.has(artist));
+      case "album":
+        return termSet.has(track.album.name);
+      case "track":
+        return termSet.has(track.name);
+      default:
+        return false;
+    }
+  }
+  _evaluateLike(track) {
+    const regex = new RegExp(this.term);
+    switch (this.keyword) {
+      case "artist":
+        return track.artists.find((artist) => regex.test(artist.name));
+      case "album":
+        return regex.test(track.album.name);
+      case "track":
+        return regex.test(track.name);
+      default:
+        return false;
+    }
   }
 }
 
