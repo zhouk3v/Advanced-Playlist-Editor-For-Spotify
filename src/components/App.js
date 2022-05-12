@@ -140,7 +140,7 @@ const App = () => {
           Login to Spotify
         </a>
       )}
-      {validState && token && <Editor token={token} logout={logout} />}
+      {validState && token && <Editor logout={logout} />}
     </div>
   );
 };
