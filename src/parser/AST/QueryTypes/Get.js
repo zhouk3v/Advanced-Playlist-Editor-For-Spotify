@@ -9,7 +9,11 @@ class Get {
     }`;
   }
   async execute() {
-    const tracks = this.primary.getTracks();
+    const unfilteredTracks = await this.primary.getTracks();
+    console.log(unfilteredTracks);
+    if (!this.secondary) {
+      return unfilteredTracks;
+    }
   }
 }
 

@@ -1,18 +1,18 @@
 // TODO: overhaul error throwing
 import { EQUALS_CONDITION, IN_CONDITION, REGEX_CONDITION } from "./config";
 import lexer from "./lexer";
-import add from "./AST/Add";
+import add from "./AST/QueryTypes/Add";
 import andExpr from "./AST/SecondaryConditionExprs/AndExpr";
 import baseCondition from "./AST/SecondaryConditionExprs/BaseCondition";
-import create from "./AST/Create";
-import deleteplaylist from "./AST/DeletePlaylist";
-import deletetrack from "./AST/DeleteTrack";
-import get from "./AST/Get";
+import create from "./AST/QueryTypes/Create";
+import deleteplaylist from "./AST/QueryTypes/DeletePlaylist";
+import deletetrack from "./AST/QueryTypes/DeleteTrack";
+import get from "./AST/QueryTypes/Get";
 import notExpr from "./AST/SecondaryConditionExprs/NotExpr";
 import orExpr from "./AST/SecondaryConditionExprs/OrExpr";
-import primaryconditions from "./AST/PrimaryConditions";
-import search from "./AST/Search";
-import secondaryconditions from "./AST/SecondaryCondition";
+import primaryconditions from "./AST/Conditions/PrimaryConditions";
+import search from "./AST/QueryTypes/Search";
+import secondaryconditions from "./AST/Conditions/SecondaryCondition";
 
 class Recognizer {
   constructor() {

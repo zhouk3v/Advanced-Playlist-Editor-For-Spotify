@@ -3,7 +3,7 @@ import {
   getTracksFromAlbums,
   getTracksFromPlaylist,
   getTrack,
-} from "../../API/fetchTracks";
+} from "../../../API/fetchTracks";
 
 class PrimaryConditions {
   constructor() {
@@ -62,7 +62,7 @@ class PrimaryConditions {
       promises.push(getTracksFromPlaylist(playlist));
     });
     const tracks = await Promise.all(promises);
-    return tracks;
+    return tracks.flat();
   }
 }
 
