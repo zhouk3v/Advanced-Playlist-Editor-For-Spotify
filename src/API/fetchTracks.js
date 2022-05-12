@@ -1,24 +1,12 @@
 //TODO: relax case sensitive when checking names
-//TODO: add renew token function
-const callAPI = async (url) => {
-  const token = localStorage.getItem("accesstoken");
-  const res = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  const json = await res.json();
-  return json;
-};
+import { getJSON } from "./API";
 
 export const getTracksFromArtist = async (artist) => {
   const tracks = [];
   // Search for the artist by name in the api
   const searchUrl = new URL("https://api.spotify.com/v1/search");
   searchUrl.search = new URLSearchParams({ q: artist, type: "artist" });
-  const searchJson = await callAPI(searchUrl);
+  const searchJson = await getJSON(searchUrl);
   // guard clause to check if the first result matches the passed in artist
   if (
     searchJson.artists.items.length === 0 &&
@@ -37,7 +25,7 @@ export const getTracksFromArtist = async (artist) => {
   do {
     // Fetch the first page of the artist's album
     const albumIds = [];
-    const artistAlbums = await callAPI(artistAlbumsUrl);
+    const artistAlbums = await getJSON(artistAlbumsUrl);
     // Grab the album ids for use in later API calls
     artistAlbums.items.forEach((album) => {
       albumIds.push(album.id);
@@ -46,7 +34,7 @@ export const getTracksFromArtist = async (artist) => {
     const getSeveralAlbumsUrl = new URL(
       `	https://api.spotify.com/v1/albums?ids=${albumIds.join(",")}`
     );
-    const getSeveralAlbums = await callAPI(getSeveralAlbumsUrl);
+    const getSeveralAlbums = await getJSON(getSeveralAlbumsUrl);
     // Go through each album, grab all the tracks from each album
     getSeveralAlbums.albums.forEach((album) => {
       album.tracks.items.forEach((track) =>
@@ -71,7 +59,7 @@ export const getTracksFromAlbums = async (albums) => {
       type: "album",
       limit: 50,
     });
-    const searchResults = await callAPI(searchUrl);
+    const searchResults = await getJSON(searchUrl);
     // Search the results with the matching name and artist (it is not a guarantee that the desired album is the first result, but it should be in the first 50)
     const albumObj = searchResults.albums.items.find(
       (curr) =>
@@ -84,7 +72,7 @@ export const getTracksFromAlbums = async (albums) => {
   const getSeveralAlbumsUrl = new URL(
     `	https://api.spotify.com/v1/albums?ids=${albumIds.join(",")}`
   );
-  const getSeveralAlbums = await callAPI(getSeveralAlbumsUrl);
+  const getSeveralAlbums = await getJSON(getSeveralAlbumsUrl);
   // Go through each album, grab all the tracks from each album
   getSeveralAlbums.albums.forEach((album) => {
     album.tracks.items.forEach((track) =>
@@ -97,7 +85,7 @@ export const getTracksFromAlbums = async (albums) => {
 export const getTracksFromPlaylist = async (playlistName) => {
   const tracks = [];
   const playlistUrl = new URL("https://api.spotify.com/v1/me/playlists");
-  const playlistRes = await callAPI(playlistUrl);
+  const playlistRes = await getJSON(playlistUrl);
   const playlistObj = playlistRes.items.find(
     (playlist) => playlist.name === playlistName
   );
@@ -106,7 +94,7 @@ export const getTracksFromPlaylist = async (playlistName) => {
   }
   let tracksUrl = playlistObj.tracks.href;
   while (tracksUrl) {
-    const trackPageJson = await callAPI(tracksUrl);
+    const trackPageJson = await getJSON(tracksUrl);
     trackPageJson.items.forEach((trackObj) => tracks.push(trackObj.track));
     tracksUrl = trackPageJson.next;
   }
@@ -121,7 +109,7 @@ export const getTrack = async (track) => {
     type: "track",
     limit: 50,
   });
-  const searchResults = await callAPI(searchUrl);
+  const searchResults = await getJSON(searchUrl);
   const found = searchResults.tracks.items.find((curr) => {
     if (track.filterType === "artist") {
       return curr.name === track.name;
