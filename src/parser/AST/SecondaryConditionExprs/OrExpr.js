@@ -7,7 +7,7 @@ class OrExpr {
     return `(${this.expr1.toString()} or ${this.expr2.toString()})`;
   }
   evaluate(track) {
-    return this.expr1(track) || this.expr2(track);
+    return this.expr1.evaluate(track) || this.expr2.evaluate(track);
   }
 }
 

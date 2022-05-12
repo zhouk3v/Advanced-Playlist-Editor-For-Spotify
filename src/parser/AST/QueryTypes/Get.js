@@ -10,10 +10,13 @@ class Get {
   }
   async execute() {
     const unfilteredTracks = await this.primary.getTracks();
-    console.log(unfilteredTracks);
     if (!this.secondary) {
       return unfilteredTracks;
     }
+    const filteredTracks = unfilteredTracks.filter((track) =>
+      this.secondary.evaluate(track)
+    );
+    console.log(filteredTracks);
   }
 }
 

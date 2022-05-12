@@ -1,5 +1,5 @@
 //TODO: relax case sensitive when checking names
-
+//TODO: add renew token function
 const callAPI = async (url) => {
   const token = localStorage.getItem("accesstoken");
   const res = await fetch(url, {
@@ -114,6 +114,7 @@ export const getTracksFromPlaylist = async (playlistName) => {
 };
 
 export const getTrack = async (track) => {
+  // Find the track with the search endpoint
   const searchUrl = new URL("https://api.spotify.com/v1/search");
   searchUrl.search = new URLSearchParams({
     q: `${track.name} ${track.filterType}:${track.filter}`,

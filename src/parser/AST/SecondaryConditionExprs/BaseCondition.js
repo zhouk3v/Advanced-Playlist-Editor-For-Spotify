@@ -24,9 +24,9 @@ class BaseCondition {
       case EQUALS_CONDITION:
         return this._evaluateEquals(track);
       case IN_CONDITION:
-        return true;
+        return this._evaluateIn(track);
       case REGEX_CONDITION:
-        return true;
+        return this._evaluateLike(track);
       default:
         throw new Error("Invalid base condition");
     }
