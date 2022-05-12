@@ -1,5 +1,5 @@
 //TODO: relax case sensitive when checking names
-import { getJSON } from "./API";
+import { getJSON } from "./api";
 
 export const getTracksFromArtist = async (artist) => {
   const tracks = [];
