@@ -56,7 +56,6 @@ export const getTracksFromArtist = async (artist) => {
     // Grab the url of the next page of albums
     artistAlbumsUrl = artistAlbums.next;
   } while (artistAlbumsUrl);
-  console.log(tracks);
   return tracks;
 };
 
@@ -92,11 +91,27 @@ export const getTracksFromAlbums = async (albums) => {
       tracks.push({ ...track, album: album })
     );
   });
-  console.log(tracks);
   return tracks;
 };
 
-export const getTracksFromPlaylist = async (playlist) => {};
+export const getTracksFromPlaylist = async (playlistName) => {
+  const tracks = [];
+  const playlistUrl = new URL("https://api.spotify.com/v1/me/playlists");
+  const playlistRes = await callAPI(playlistUrl);
+  const playlistObj = playlistRes.items.find(
+    (playlist) => playlist.name === playlistName
+  );
+  if (!playlistObj) {
+    return tracks;
+  }
+  let tracksUrl = playlistObj.tracks.href;
+  while (tracksUrl) {
+    const trackPageJson = await callAPI(tracksUrl);
+    trackPageJson.items.forEach((trackObj) => tracks.push(trackObj.track));
+    tracksUrl = trackPageJson.next;
+  }
+  return tracks;
+};
 
 export const getTrack = async (track) => {
   const searchUrl = new URL("https://api.spotify.com/v1/search");
@@ -106,7 +121,6 @@ export const getTrack = async (track) => {
     limit: 50,
   });
   const searchResults = await callAPI(searchUrl);
-  console.log(searchResults.tracks.items);
   const found = searchResults.tracks.items.find((curr) => {
     if (track.filterType === "artist") {
       return curr.name === track.name;
@@ -114,6 +128,5 @@ export const getTrack = async (track) => {
       return curr.name === track.name && curr.album.name === track.filter;
     }
   });
-  console.log(found);
   return found;
 };

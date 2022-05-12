@@ -11,7 +11,7 @@ const clientId = "c55715b0bcae4293b92804f55b94c15c";
 const redirectUri = "http://localhost:3000/";
 // production Uri
 
-const scopes = [];
+const scopes = ["playlist-read-private"];
 
 const base64Encode = (str) => {
   return str

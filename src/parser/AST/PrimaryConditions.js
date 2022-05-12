@@ -58,6 +58,11 @@ class PrimaryConditions {
     this.tracks.forEach((track) => {
       promises.push(getTrack(track));
     });
+    this.playlists.forEach((playlist) => {
+      promises.push(getTracksFromPlaylist(playlist));
+    });
+    const tracks = await Promise.all(promises);
+    return tracks;
   }
 }
 
