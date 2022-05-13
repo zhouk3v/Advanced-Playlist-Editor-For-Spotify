@@ -1,0 +1,99 @@
+import { getJSON, getToken } from "./api";
+
+const getPlaylistId = async (playlistName) => {
+  const playlistUrl = new URL("https://api.spotify.com/v1/me/playlists");
+  const playlistRes = await getJSON(playlistUrl);
+  const playlistObj = playlistRes.items.find(
+    (playlist) => playlist.name === playlistName
+  );
+  if (!playlistObj) {
+    return null;
+  }
+  return playlistObj.id;
+};
+
+const returnChunks = (arr, chunkSize) => {
+  const res = [];
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    const chunk = arr.slice(i, i + chunkSize);
+    res.push(chunk);
+  }
+  return res;
+};
+
+export const createPlaylist = async (playlist) => {
+  const token = getToken();
+  // Get the user id through the v1/me endpoint
+  const user = await getJSON("https://api.spotify.com/v1/me");
+  const userId = user.id;
+  // Send a POST request to the user's playlist endpoint to create the playlist
+  const res = await fetch(
+    `https://api.spotify.com/v1/users/${userId}/playlists`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        name: playlist,
+      }),
+    }
+  );
+  console.log(res);
+};
+
+export const deletePlaylists = async (playlist) => {
+  const token = getToken();
+  const playlistId = await getPlaylistId(playlist);
+  if (!playlistId) {
+    return;
+  }
+
+  // Send a POST request to unfollow the playlist to remove it from the user's list of playlists
+  const res = await fetch(
+    `	https://api.spotify.com/v1/playlists/${playlistId}/followers`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  console.log(res);
+};
+
+export const addTracksToPlaylist = async (playlist, tracks) => {
+  const token = getToken();
+  const playlistId = await getPlaylistId(playlist);
+  if (!playlistId) {
+    return;
+  }
+  const uris = [];
+  tracks.forEach((track) => {
+    uris.push(track.uri);
+  });
+  const chunks = returnChunks(uris, 100);
+  for (let i = 0; i < chunks.length; i++) {
+    const res = await fetch(
+      `	https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: {
+          uris: uris,
+        },
+      }
+    );
+    console.log(res);
+  }
+};
+
+export const removeTracksFromPlaylists = async (playlist, tracks) => {};

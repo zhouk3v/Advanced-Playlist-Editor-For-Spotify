@@ -1,3 +1,5 @@
+import { deletePlaylists } from "../../../API/playlists";
+
 class DeletePlaylist {
   constructor(term) {
     this.term = term;
@@ -5,8 +7,8 @@ class DeletePlaylist {
   toString() {
     return `delete playlist ${this.term.toString()}`;
   }
-  execute() {
-    
+  async execute() {
+    await deletePlaylists(this.term);
   }
 }
 

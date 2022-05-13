@@ -1,6 +1,13 @@
 //TODO: add renew token function
-export const getJSON = async (url) => {
+
+export const getToken = () => {
+  // TODO:
   const token = localStorage.getItem("accesstoken");
+  return token;
+};
+
+export const getJSON = async (url) => {
+  const token = getToken();
   const res = await fetch(url, {
     method: "GET",
     headers: {

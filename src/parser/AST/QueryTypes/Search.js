@@ -1,3 +1,5 @@
+import { getJSON } from "../../../API/api";
+
 class Search {
   constructor(keyword, term) {
     this.keyword = keyword;
@@ -6,7 +8,16 @@ class Search {
   toString() {
     return `search ${this.keyword.toString()} ${this.term.toString()}`;
   }
-  execute() {}
+  async execute() {
+    const searchUrl = new URL("https://api.spotify.com/v1/search");
+    searchUrl.search = new URLSearchParams({
+      q: this.term,
+      type: this.keyword,
+    });
+    const results = await getJSON(searchUrl);
+    console.log(results);
+    return results;
+  }
 }
 
 export default Search;

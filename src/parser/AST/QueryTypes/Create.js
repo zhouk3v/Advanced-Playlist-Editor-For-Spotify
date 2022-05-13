@@ -1,3 +1,5 @@
+import { createPlaylist } from "../../../API/playlists";
+
 class Create {
   constructor(term) {
     this.term = term;
@@ -5,8 +7,8 @@ class Create {
   toString() {
     return `create playlist ${this.term.toString()}`;
   }
-  execute() {
-    
+  async execute() {
+    createPlaylist(this.term);
   }
 }
 

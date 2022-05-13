@@ -88,7 +88,7 @@ it("handles secondary condtions with brackets", () => {
 
 it("handles secondary condtions with a mix of and, or, not and brackets", () => {
   recognizer.parseInput(
-    `get artist:"Rammstein" where (album="Mutter" or album="Reise Reise") and not (album="Reise Reise" and album="Mutter")`
+    `get artist:"Rammstein" where (album="Mutter" or album="Reise Reise") and not (album="Remixes" and album="Rosenrot")`
   );
 });
 

@@ -1,3 +1,5 @@
+import { addTracksToPlaylist } from "../../../API/playlists";
+
 class Add {
   constructor(playlist, primary, secondary) {
     this.playlist = playlist;
@@ -9,7 +11,17 @@ class Add {
       this.secondary ? this.secondary.toString() : ""
     }`;
   }
-  execute() {}
+  async execute() {
+    const unfilteredTracks = await this.primary.getTracks();
+    if (!this.secondary) {
+      await addTracksToPlaylist(this.playlist, unfilteredTracks);
+      return unfilteredTracks;
+    }
+    const filteredTracks = unfilteredTracks.filter((track) =>
+      this.secondary.evaluate(track)
+    );
+    await addTracksToPlaylist(this.playlist, filteredTracks);
+  }
 }
 
 export default Add;
