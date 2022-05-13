@@ -19,7 +19,7 @@ export const getTracksFromArtist = async (artist) => {
   const artistId = artistObj.id;
   // get the artist albums id
   let artistAlbumsUrl = new URL(
-    `https://api.spotify.com/v1/artists/${artistId}/albums?include_groups=album,single`
+    `https://api.spotify.com/v1/artists/${artistId}/albums?include_groups=album,single,compilation`
   );
   // Fetch the artist's albums, 20 albums at a time (since this is the max limit to the get several albums endpoint)
   do {

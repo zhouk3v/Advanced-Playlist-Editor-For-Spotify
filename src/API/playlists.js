@@ -87,13 +87,41 @@ export const addTracksToPlaylist = async (playlist, tracks) => {
           Accept: "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: {
-          uris: uris,
-        },
+        body: JSON.stringify({
+          uris: chunks[i],
+        }),
       }
     );
     console.log(res);
   }
 };
 
-export const removeTracksFromPlaylists = async (playlist, tracks) => {};
+export const removeTracksFromPlaylists = async (playlist, tracks) => {
+  const token = getToken();
+  const playlistId = await getPlaylistId(playlist);
+  if (!playlistId) {
+    return;
+  }
+  const uris = [];
+  tracks.forEach((track) => {
+    uris.push(track.uri);
+  });
+  const chunks = returnChunks(uris, 100);
+  for (let i = 0; i < chunks.length; i++) {
+    const res = await fetch(
+      `	https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          uris: chunks[i],
+        }),
+      }
+    );
+    console.log(res);
+  }
+};
