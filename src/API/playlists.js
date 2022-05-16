@@ -41,7 +41,6 @@ export const createPlaylist = async (playlist) => {
       }),
     }
   );
-  console.log(res);
 };
 
 export const deletePlaylists = async (playlist) => {
@@ -63,7 +62,6 @@ export const deletePlaylists = async (playlist) => {
       },
     }
   );
-  console.log(res);
 };
 
 export const addTracksToPlaylist = async (playlist, tracks) => {
@@ -92,7 +90,6 @@ export const addTracksToPlaylist = async (playlist, tracks) => {
         }),
       }
     );
-    console.log(res);
   }
 };
 
@@ -122,6 +119,5 @@ export const removeTracksFromPlaylists = async (playlist, tracks) => {
         }),
       }
     );
-    console.log(res);
   }
 };

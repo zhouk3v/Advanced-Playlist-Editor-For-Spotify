@@ -3,6 +3,7 @@ import { getTracksFromPlaylist } from "../../../API/fetchTracks";
 
 class Add {
   constructor(playlist, primary, secondary) {
+    this.type = "Add";
     this.playlist = playlist;
     this.primary = primary;
     this.secondary = secondary;

@@ -2,6 +2,7 @@ import { getJSON } from "../../../API/api";
 
 class Search {
   constructor(keyword, term) {
+    this.type = "Search";
     this.keyword = keyword;
     this.term = term;
   }

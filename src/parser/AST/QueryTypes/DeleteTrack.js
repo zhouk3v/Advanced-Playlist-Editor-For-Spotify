@@ -3,6 +3,7 @@ import { removeTracksFromPlaylists } from "../../../API/playlists";
 
 class DeleteTrack {
   constructor(playlist, secondary) {
+    this.type = "DeleteTrack";
     this.playlist = playlist;
     this.secondary = secondary;
   }

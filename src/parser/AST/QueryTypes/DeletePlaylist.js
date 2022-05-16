@@ -2,6 +2,7 @@ import { deletePlaylists } from "../../../API/playlists";
 
 class DeletePlaylist {
   constructor(term) {
+    this.type = "DeletePlaylist";
     this.term = term;
   }
   toString() {
@@ -9,6 +10,7 @@ class DeletePlaylist {
   }
   async execute() {
     await deletePlaylists(this.term);
+    return `Deleted playlist ${this.term}`;
   }
 }
 
