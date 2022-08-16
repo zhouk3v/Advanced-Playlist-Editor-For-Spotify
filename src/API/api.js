@@ -1,7 +1,7 @@
 //TODO: add renew token function
 
 export const getToken = () => {
-  // TODO:
+  // TODO: Add in refresh token function
   const token = localStorage.getItem("accesstoken");
   return token;
 };

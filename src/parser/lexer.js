@@ -50,6 +50,7 @@ class lexer {
     const token = this.tokens[this.index];
     return token === toInspect;
   }
+
   consume(toConsume) {
     const token = this.tokens[this.index];
     if (token === toConsume) {
@@ -64,6 +65,7 @@ class lexer {
     const token = this.tokens[this.index];
     return this._isTerm(token);
   }
+
   consumeTerm() {
     const token = this.tokens[this.index];
     if (this._isTerm(token)) {

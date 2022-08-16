@@ -5,7 +5,7 @@ import QueryResults from "./queryResults";
 const Editor = ({ logout }) => {
   const [query, setQuery] = useState("");
   const [queryType, setQueryType] = useState("");
-  const [result, setResult] = useState("");
+  const [result, setResult] = useState([]);
   const [loading, setLoading] = useState("");
 
   const parser = new Parser();

@@ -16,7 +16,6 @@ class Search {
       type: this.keyword,
     });
     const results = await getJSON(searchUrl);
-    console.log(results);
     return results;
   }
 }
