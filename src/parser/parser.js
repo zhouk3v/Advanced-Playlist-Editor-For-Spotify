@@ -14,7 +14,7 @@ import primaryconditions from "./AST/Conditions/PrimaryConditions";
 import search from "./AST/QueryTypes/Search";
 import secondaryconditions from "./AST/Conditions/SecondaryCondition";
 
-class Recognizer {
+class Parser {
   constructor() {
     this.lexer = new lexer();
   }
@@ -410,4 +410,4 @@ class Recognizer {
   }
 }
 
-export default Recognizer;
+export default Parser;
