@@ -1,4 +1,7 @@
-import { getTracksFromPlaylist } from "../../../API/fetchTracks";
+import {
+  getTracksFromPlaylist,
+  getAllTracksFromPlaylist,
+} from "../../../API/fetchTracks";
 import { removeTracksFromPlaylists } from "../../../API/playlists";
 
 class DeleteTrack {
@@ -13,7 +16,7 @@ class DeleteTrack {
     }`;
   }
   async execute() {
-    const tracks = await getTracksFromPlaylist(this.playlist);
+    const tracks = await getAllTracksFromPlaylist(this.playlist);
     if (!this.secondary) {
       await removeTracksFromPlaylists(this.playlist, tracks);
     } else {

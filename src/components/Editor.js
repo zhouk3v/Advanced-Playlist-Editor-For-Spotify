@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import Parser from "../parser/parser";
-import QueryResults from "./queryResults";
+import QueryResults from "./QueryResults";
 
 const Editor = ({ logout }) => {
   const [query, setQuery] = useState("");
   const [queryType, setQueryType] = useState("");
-  const [result, setResult] = useState([]);
+  const [result, setResult] = useState({
+    tracks: [],
+    url: null,
+  });
   const [loading, setLoading] = useState("");
 
   const parser = new Parser();

@@ -1,9 +1,25 @@
+// TODO: Implement infinite scroll with results
+import "./css/QueryResults.css";
 const QueryResults = ({ type, results }) => {
-  // Render the result of an add, get or deletetrack query
+  // Render the result of a get query
+  const renderGetQuery = () => {
+    return (
+      <div className="queryResults">
+        {results.tracks.map((result) => {
+          return (
+            <div key={result.id}>
+              {result.name} -- {result.album.name} -- {result.artists[0].name}
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+  // Render the result of an add or deletetrack query
   const renderTracksQuery = () => {
-    return results.map((result) => {
+    return results.tracks.map((result) => {
       return (
-        <div>
+        <div key={result.id}>
           {result.name} -- {result.album.name} -- {result.artists[0].name}
         </div>
       );
@@ -18,14 +34,15 @@ const QueryResults = ({ type, results }) => {
     return <div>Insert search results here</div>;
   };
   switch (type) {
-    case 'Get':
-    case 'Add':
-    case 'DeleteTrack':
+    case "Get":
+      return renderGetQuery();
+    case "Add":
+    case "DeleteTrack":
       return renderTracksQuery();
-    case 'Create':
-    case 'DeletePlaylist':
+    case "Create":
+    case "DeletePlaylist":
       return renderPlaylistQuery();
-    case 'Search':
+    case "Search":
       return renderSearchQuery();
     default:
       return <div>Waiting for a query</div>;

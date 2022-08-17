@@ -1,7 +1,7 @@
 import {
   getTracksFromArtist,
   getTracksFromAlbums,
-  getTracksFromPlaylist,
+  getAllTracksFromPlaylist,
   getTrack,
 } from "../../../API/fetchTracks";
 
@@ -59,7 +59,7 @@ class PrimaryConditions {
       promises.push(getTrack(track));
     });
     this.playlists.forEach((playlist) => {
-      promises.push(getTracksFromPlaylist(playlist));
+      promises.push(getAllTracksFromPlaylist(playlist));
     });
     const tracks = await Promise.all(promises);
     return tracks.flat();

@@ -12,12 +12,18 @@ class Get {
   async execute() {
     const unfilteredTracks = await this.primary.getTracks();
     if (!this.secondary) {
-      return unfilteredTracks;
+      return {
+        tracks: unfilteredTracks,
+        url: null,
+      };
     }
     const filteredTracks = unfilteredTracks.filter((track) =>
       this.secondary.evaluate(track)
     );
-    return filteredTracks;
+    return {
+      tracks: filteredTracks,
+      url: null,
+    };
   }
 }
 

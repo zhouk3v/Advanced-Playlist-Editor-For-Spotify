@@ -1,4 +1,4 @@
-//TODO: relax case sensitive when checking names
+//TODO: relax case sensitivity when checking names
 import { getJSON } from "./api";
 
 export const getTracksFromArtist = async (artist) => {
@@ -82,7 +82,8 @@ export const getTracksFromAlbums = async (albums) => {
   return tracks;
 };
 
-export const getTracksFromPlaylist = async (playlistName) => {
+// Fetch all tracks from playlist
+export const getAllTracksFromPlaylist = async (playlistName) => {
   const tracks = [];
   const playlistUrl = new URL("https://api.spotify.com/v1/me/playlists");
   const playlistRes = await getJSON(playlistUrl);
@@ -99,6 +100,28 @@ export const getTracksFromPlaylist = async (playlistName) => {
     tracksUrl = trackPageJson.next;
   }
   return tracks;
+};
+
+// Fetch the first page of tracks from a playlist, this is used in infinite scrolling for the editor
+export const getTracksFromPlaylist = async (playlistName) => {
+  const tracksObject = {
+    tracks: [],
+    url: null,
+  };
+  const playlistUrl = new URL("https://api.spotify.com/v1/me/playlists");
+  const playlistRes = await getJSON(playlistUrl);
+  const playlistObj = playlistRes.items.find(
+    (playlist) => playlist.name === playlistName
+  );
+  if (!playlistObj) {
+    return tracksObject;
+  }
+  const trackPageJson = await getJSON(playlistObj.tracks.href);
+  trackPageJson.items.forEach((trackObj) =>
+    tracksObject.tracks.push(trackObj.track)
+  );
+  tracksObject.url = trackPageJson.next;
+  return tracksObject;
 };
 
 export const getTrack = async (track) => {
