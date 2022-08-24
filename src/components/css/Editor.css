@@ -1,0 +1,25 @@
+html,
+body {
+  margin: 0px;
+}
+
+.editor {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+}
+
+.form {
+  margin-top: auto;
+  display: flex;
+}
+
+.query-textbox {
+  flex-grow: 1;
+}

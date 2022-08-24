@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Parser from "../parser/parser";
 import QueryResults from "./QueryResults";
+import "./css/Editor.css";
 
 const Editor = ({ logout }) => {
   const [query, setQuery] = useState("");
@@ -28,16 +29,18 @@ const Editor = ({ logout }) => {
   };
 
   return (
-    <div>
-      <div>{loading}</div>
-      <button onClick={logout}>Logout</button>
-      <form onSubmit={handleSubmit}>
-        <textarea onChange={handleChange} />
+    <div className="editor">
+      <div className="header">
+        <div>{loading}</div>
+        <button onClick={logout}>Logout</button>
+      </div>
+      <QueryResults type={queryType} results={result}></QueryResults>
+      <form className="form" onSubmit={handleSubmit}>
+        <textarea className="query-textbox" onChange={handleChange} />
         <div>
-          <button>Submit Query</button>
+          <button>Submit</button>
         </div>
       </form>
-      <QueryResults type={queryType} results={result}></QueryResults>
     </div>
   );
 };
