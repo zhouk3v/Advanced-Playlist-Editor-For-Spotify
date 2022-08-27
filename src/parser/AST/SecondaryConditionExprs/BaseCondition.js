@@ -7,19 +7,6 @@ class BaseCondition {
     this.type = rhs.type;
     this.term = rhs.term;
   }
-  toString() {
-    switch (this.type) {
-      case EQUALS_CONDITION:
-        return `${this.keyword} = ${this.term}`;
-      case IN_CONDITION:
-        const termsStr = this.term.join();
-        return `${this.keyword} in (${termsStr})`;
-      case REGEX_CONDITION:
-        return `${this.keyword} like ${this.term}`;
-      default:
-        throw new Error("Invalid base condition");
-    }
-  }
   evaluate(track) {
     switch (this.type) {
       case EQUALS_CONDITION:

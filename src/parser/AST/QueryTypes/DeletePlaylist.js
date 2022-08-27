@@ -5,9 +5,6 @@ class DeletePlaylist {
     this.type = "DeletePlaylist";
     this.term = term;
   }
-  toString() {
-    return `delete playlist ${this.term.toString()}`;
-  }
   async execute() {
     await deletePlaylists(this.term);
     return `Deleted playlist ${this.term}`;

@@ -6,9 +6,6 @@ class Search {
     this.keyword = keyword;
     this.term = term;
   }
-  toString() {
-    return `search ${this.keyword.toString()} ${this.term.toString()}`;
-  }
   async execute() {
     const searchUrl = new URL("https://api.spotify.com/v1/search");
     searchUrl.search = new URLSearchParams({

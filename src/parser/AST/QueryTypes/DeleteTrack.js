@@ -10,11 +10,6 @@ class DeleteTrack {
     this.playlist = playlist;
     this.secondary = secondary;
   }
-  toString() {
-    return `delete from ${this.playlist.toString()} ${
-      this.secondary ? this.secondary.toString() : ""
-    }`;
-  }
   async execute() {
     const tracks = await getAllTracksFromPlaylist(this.playlist);
     if (!this.secondary) {
