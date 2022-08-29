@@ -3,7 +3,7 @@ import { getJSON } from "../API/api";
 import "./css/InfiniteScroll.css";
 
 // TODO: fix last page duplication
-const InfiniteScroll = ({ items, next }) => {
+const InfiniteScroll = ({ type, items, next }) => {
   const [listItems, setListItems] = useState(items);
   const [nextUrl, setNextUrl] = useState(next);
   const [isFetching, setIsFetching] = useState(false);
@@ -26,10 +26,10 @@ const InfiniteScroll = ({ items, next }) => {
   useEffect(() => {
     if (!isFetching) return;
     const fetchNextPage = async () => {
-      const tracks = [...listItems];
+      const items = [...listItems];
       const nextPageJson = await getJSON(nextUrl);
-      nextPageJson.items.forEach((trackObj) => tracks.push(trackObj.track));
-      setListItems(tracks);
+      nextPageJson.items.forEach((trackObj) => items.push(trackObj.track));
+      setListItems(items);
       setNextUrl(nextPageJson.next);
     };
     setIsFetching(false);
@@ -39,12 +39,18 @@ const InfiniteScroll = ({ items, next }) => {
   return (
     <div onScroll={handleScroll} className="query-results" ref={listInnerRef}>
       <ol>
-        {listItems.map((listItem) => (
-          <li key={listItem.id}>
-            {listItem.name} -- {listItem.album.name} --{" "}
-            {listItem.artists[0].name} -- {listItem.id}
-          </li>
-        ))}
+        {listItems.map((listItem) => {
+          if (type === "tracks") {
+            return (
+              <li key={listItem.id}>
+                {listItem.name} -- {listItem.album.name} --{" "}
+                {listItem.artists[0].name}
+              </li>
+            );
+          } else {
+            return <li key={listItem.id}>{listItem.name}</li>;
+          }
+        })}
       </ol>
       {isFetching && "Fetching more list items..."}
     </div>

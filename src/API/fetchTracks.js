@@ -22,6 +22,7 @@ export const getTracksFromArtist = async (artist) => {
     `https://api.spotify.com/v1/artists/${artistId}/albums?include_groups=album,single,compilation`
   );
   // Fetch the artist's albums, 20 albums at a time (since this is the max limit to the get several albums endpoint)
+  // TODO: Look into executing mutliple get artist albums and get several album calls via Promise.all
   do {
     // Fetch the first page of the artist's album
     const albumIds = [];
@@ -83,6 +84,7 @@ export const getTracksFromAlbums = async (albums) => {
 };
 
 // Fetch all tracks from playlist
+// TODO: Look into getting all tracks in a playlist at once with Promise.all and some fiddling with the URL from the next property
 export const getAllTracksFromPlaylist = async (playlistName) => {
   const tracks = [];
   const playlistUrl = new URL("https://api.spotify.com/v1/me/playlists");
@@ -105,7 +107,7 @@ export const getAllTracksFromPlaylist = async (playlistName) => {
 // Fetch the first page of tracks from a playlist, this is used in infinite scrolling for the editor
 export const getTracksFromPlaylist = async (playlistName) => {
   const tracksObject = {
-    tracks: [],
+    items: [],
     url: null,
   };
   const playlistUrl = new URL("https://api.spotify.com/v1/me/playlists");
@@ -118,7 +120,7 @@ export const getTracksFromPlaylist = async (playlistName) => {
   }
   const trackPageJson = await getJSON(playlistObj.tracks.href);
   trackPageJson.items.forEach((trackObj) =>
-    tracksObject.tracks.push(trackObj.track)
+    tracksObject.items.push(trackObj.track)
   );
   tracksObject.url = trackPageJson.next;
   return tracksObject;

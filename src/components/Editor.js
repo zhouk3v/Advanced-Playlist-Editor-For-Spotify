@@ -7,7 +7,7 @@ const Editor = ({ logout }) => {
   const [query, setQuery] = useState("");
   const [queryType, setQueryType] = useState("");
   const [result, setResult] = useState({
-    tracks: [],
+    items: [],
     url: null,
   });
   const [loading, setLoading] = useState("");

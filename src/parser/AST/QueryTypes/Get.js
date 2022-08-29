@@ -8,7 +8,7 @@ class Get {
     const unfilteredTracks = await this.primary.getTracks();
     if (!this.secondary) {
       return {
-        tracks: unfilteredTracks,
+        items: unfilteredTracks,
         url: null,
       };
     }
@@ -16,7 +16,7 @@ class Get {
       this.secondary.evaluate(track)
     );
     return {
-      tracks: filteredTracks,
+      items: filteredTracks,
       url: null,
     };
   }

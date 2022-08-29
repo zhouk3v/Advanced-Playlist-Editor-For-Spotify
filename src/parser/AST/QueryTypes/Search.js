@@ -13,7 +13,11 @@ class Search {
       type: this.keyword,
     });
     const results = await getJSON(searchUrl);
-    return results;
+    const keywordResults = results[this.keyword + "s"];
+    return {
+      items: keywordResults.items,
+      url: keywordResults.url,
+    };
   }
 }
 

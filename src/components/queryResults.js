@@ -5,27 +5,12 @@ import "./css/QueryResults.css";
 import InfiniteScroll from "./InfiniteScroll";
 
 const QueryResults = ({ type, results }) => {
-  // Render the result of a get query
-  const renderGetQuery = () => {
-    // return results.tracks.map((result) => {
-    //   return (
-    //     <div key={result.id}>
-    //       {result.name} -- {result.album.name} -- {result.artists[0].name}
-    //     </div>
-    //   );
-    // });
-    return (
-      <InfiniteScroll
-        items={results.tracks}
-        next={results.url}
-      ></InfiniteScroll>
-    );
-  };
-  // Render the result of an add or deletetrack query
+  // Render the result of a get, add or deletetrack query
   const renderTracksQuery = () => {
     return (
       <InfiniteScroll
-        items={results.tracks}
+        type="tracks"
+        items={results.items}
         next={results.url}
       ></InfiniteScroll>
     );
@@ -36,12 +21,17 @@ const QueryResults = ({ type, results }) => {
   };
   // Render the result of a search query
   const renderSearchQuery = () => {
-    return <div>Insert search results here</div>;
+    return (
+      <InfiniteScroll
+        type="search"
+        items={results.items}
+        next={results.url}
+      ></InfiniteScroll>
+    );
   };
 
   switch (type) {
     case "Get":
-      return renderGetQuery();
     case "Add":
     case "DeleteTrack":
       return renderTracksQuery();
