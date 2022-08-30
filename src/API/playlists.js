@@ -12,7 +12,7 @@ const getPlaylistId = async (playlistName) => {
   return playlistObj.id;
 };
 
-const returnChunks = (arr, chunkSize) => {
+const splitIntoChunks = (arr, chunkSize) => {
   const res = [];
   for (let i = 0; i < arr.length; i += chunkSize) {
     const chunk = arr.slice(i, i + chunkSize);
@@ -27,20 +27,17 @@ export const createPlaylist = async (playlist) => {
   const user = await getJSON("https://api.spotify.com/v1/me");
   const userId = user.id;
   // Send a POST request to the user's playlist endpoint to create the playlist
-  const res = await fetch(
-    `https://api.spotify.com/v1/users/${userId}/playlists`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        name: playlist,
-      }),
-    }
-  );
+  await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      name: playlist,
+    }),
+  });
 };
 
 export const deletePlaylists = async (playlist) => {
@@ -49,75 +46,39 @@ export const deletePlaylists = async (playlist) => {
   if (!playlistId) {
     return;
   }
-
   // Send a POST request to unfollow the playlist to remove it from the user's list of playlists
-  const res = await fetch(
-    `	https://api.spotify.com/v1/playlists/${playlistId}/followers`,
-    {
-      method: "DELETE",
+  await fetch(`	https://api.spotify.com/v1/playlists/${playlistId}/followers`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const editPlaylist = async (playlist, tracks, methodType) => {
+  const token = getToken();
+  const playlistId = await getPlaylistId(playlist);
+  if (!playlistId) {
+    return;
+  }
+  const uris = [];
+  tracks.forEach((track) => {
+    uris.push(track.uri);
+  });
+  const chunks = splitIntoChunks(uris, 100);
+  for (let i = 0; i < chunks.length; i++) {
+    await fetch(`	https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+      method: methodType,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
       },
-    }
-  );
-};
-
-export const addTracksToPlaylist = async (playlist, tracks) => {
-  const token = getToken();
-  const playlistId = await getPlaylistId(playlist);
-  if (!playlistId) {
-    return;
-  }
-  const uris = [];
-  tracks.forEach((track) => {
-    uris.push(track.uri);
-  });
-  const chunks = returnChunks(uris, 100);
-  for (let i = 0; i < chunks.length; i++) {
-    const res = await fetch(
-      `	https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          uris: chunks[i],
-        }),
-      }
-    );
-  }
-};
-
-export const removeTracksFromPlaylists = async (playlist, tracks) => {
-  const token = getToken();
-  const playlistId = await getPlaylistId(playlist);
-  if (!playlistId) {
-    return;
-  }
-  const uris = [];
-  tracks.forEach((track) => {
-    uris.push(track.uri);
-  });
-  const chunks = returnChunks(uris, 100);
-  for (let i = 0; i < chunks.length; i++) {
-    const res = await fetch(
-      `	https://api.spotify.com/v1/playlists/${playlistId}/tracks`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          uris: chunks[i],
-        }),
-      }
-    );
+      body: JSON.stringify({
+        uris: chunks[i],
+      }),
+    });
   }
 };

@@ -1,5 +1,6 @@
-import { addTracksToPlaylist } from "../../../API/playlists";
-import { getTracksFromPlaylist } from "../../../API/fetchTracks";
+import { editPlaylist } from "../../../API/playlists";
+import { getFirstPageOfPlaylist } from "../../../API/fetchTracks";
+import { ADD } from "../../config";
 
 class Add {
   constructor(playlist, primary, secondary) {
@@ -11,14 +12,14 @@ class Add {
   async execute() {
     const unfilteredTracks = await this.primary.getTracks();
     if (!this.secondary) {
-      await addTracksToPlaylist(this.playlist, unfilteredTracks);
+      await editPlaylist(this.playlist, unfilteredTracks, ADD);
     } else {
       const filteredTracks = unfilteredTracks.filter((track) =>
         this.secondary.evaluate(track)
       );
-      await addTracksToPlaylist(this.playlist, filteredTracks);
+      await editPlaylist(this.playlist, filteredTracks, ADD);
     }
-    const newPlaylist = await getTracksFromPlaylist(this.playlist);
+    const newPlaylist = await getFirstPageOfPlaylist(this.playlist);
     return newPlaylist;
   }
 }

@@ -105,7 +105,7 @@ export const getAllTracksFromPlaylist = async (playlistName) => {
 };
 
 // Fetch the first page of tracks from a playlist, this is used in infinite scrolling for the editor
-export const getTracksFromPlaylist = async (playlistName) => {
+export const getFirstPageOfPlaylist = async (playlistName) => {
   const tracksObject = {
     items: [],
     url: null,
