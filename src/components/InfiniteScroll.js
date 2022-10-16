@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { getJSON } from "../API/api";
 import "./css/InfiniteScroll.css";
+import { TrackItem } from "./listitems/trackItem";
 
 // TODO: fix last page duplication
 const InfiniteScroll = ({ type, items, next }) => {
@@ -38,20 +39,25 @@ const InfiniteScroll = ({ type, items, next }) => {
 
   return (
     <div onScroll={handleScroll} className="query-results" ref={listInnerRef}>
-      <ol>
-        {listItems.map((listItem) => {
-          if (type === "tracks") {
-            return (
-              <li key={listItem.id}>
-                {listItem.name} -- {listItem.album.name} --{" "}
-                {listItem.artists[0].name}
-              </li>
-            );
-          } else {
-            return <li key={listItem.id}>{listItem.name}</li>;
-          }
-        })}
-      </ol>
+      {listItems.map((listItem, index) => {
+        if (type === "tracks") {
+          return (
+            // <div key={listItem.id} className="track">
+            //   {index} -- {listItem.name} -- {listItem.album.name} --{" "}
+            //   {listItem.artists[0].name}
+            // </div>
+            <TrackItem
+              id={listItem.id}
+              index={index}
+              trackName={listItem.name}
+              albumName={listItem.album.name}
+              artistName={listItem.artists[0].name}
+            />
+          );
+        } else {
+          return <li key={listItem.id}>{listItem.name}</li>;
+        }
+      })}
       {isFetching && "Fetching more list items..."}
     </div>
   );
