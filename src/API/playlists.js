@@ -1,4 +1,5 @@
 import { getJSON, getToken } from "./api";
+import { splitIntoChunks } from "./util";
 
 const getPlaylistId = async (playlistName) => {
   const playlistUrl = new URL("https://api.spotify.com/v1/me/playlists");
@@ -10,15 +11,6 @@ const getPlaylistId = async (playlistName) => {
     return null;
   }
   return playlistObj.id;
-};
-
-const splitIntoChunks = (arr, chunkSize) => {
-  const res = [];
-  for (let i = 0; i < arr.length; i += chunkSize) {
-    const chunk = arr.slice(i, i + chunkSize);
-    res.push(chunk);
-  }
-  return res;
 };
 
 export const createPlaylist = async (playlist) => {

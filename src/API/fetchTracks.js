@@ -1,5 +1,6 @@
 //TODO: relax case sensitivity when checking names
 import { getJSON } from "./api";
+import { splitIntoChunks } from "./util";
 
 export const getTracksFromArtist = async (artist) => {
   const tracks = [];
@@ -69,17 +70,21 @@ export const getTracksFromAlbums = async (albums) => {
     );
     albumIds.push(albumObj.id);
   }
-  // Use the get several albums endpoint to get the tracks for the album
-  const getSeveralAlbumsUrl = new URL(
-    `	https://api.spotify.com/v1/albums?ids=${albumIds.join(",")}`
-  );
-  const getSeveralAlbums = await getJSON(getSeveralAlbumsUrl);
-  // Go through each album, grab all the tracks from each album
-  getSeveralAlbums.albums.forEach((album) => {
-    album.tracks.items.forEach((track) =>
-      tracks.push({ ...track, album: album })
+  // Use the get several albums endpoint to get the tracks for the album (do it 20 albums at a time)
+  const albumIdChunks = splitIntoChunks(albumIds, 20);
+  for (let i = 0; i < albumIdChunks.length; i++) {
+    const chunk = albumIdChunks[i];
+    const getSeveralAlbumsUrl = new URL(
+      `https://api.spotify.com/v1/albums?ids=${chunk.join(",")}`
     );
-  });
+    const getSeveralAlbums = await getJSON(getSeveralAlbumsUrl);
+    // Go through each album, grab all the tracks from each album
+    getSeveralAlbums.albums.forEach((album) => {
+      album.tracks.items.forEach((track) =>
+        tracks.push({ ...track, album: album })
+      );
+    });
+  }
   return tracks;
 };
 
