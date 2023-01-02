@@ -1,9 +1,6 @@
-/* TODO: Redo with css-grid */
 .track {
-  display: grid;
-  grid-template-columns: auto auto auto auto;
+  padding: 5px;
 }
-
 .index {
   padding: 5px;
 }
@@ -14,10 +11,8 @@
 
 .album {
   padding: 5px;
-  flex-grow: 1;
 }
 
 .artist {
   padding: 5px;
-  flex-grow: 1;
 }

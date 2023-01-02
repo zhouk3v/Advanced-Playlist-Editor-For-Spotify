@@ -12,3 +12,7 @@
 .query-results {
   overflow-y: scroll;
 }
+
+.query-results-table {
+  width: 100%;
+}
