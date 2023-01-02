@@ -1,23 +1,23 @@
+/* TODO: Redo with css-grid */
 .track {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
 }
 
 .index {
   padding: 5px;
-  flex-grow: 0;
 }
 
 .name {
   padding: 5px;
-  width: 50%;
 }
 
 .album {
   padding: 5px;
-  width: 25%;
+  flex-grow: 1;
 }
 
 .artist {
   padding: 5px;
-  width: 25%;
+  flex-grow: 1;
 }

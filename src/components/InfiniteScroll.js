@@ -47,6 +47,7 @@ const InfiniteScroll = ({ type, items, next }) => {
             //   {listItem.artists[0].name}
             // </div>
             <TrackItem
+              key={listItem.id}
               id={listItem.id}
               index={index}
               trackName={listItem.name}

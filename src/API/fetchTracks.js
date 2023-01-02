@@ -89,7 +89,6 @@ export const getTracksFromAlbums = async (albums) => {
 };
 
 // Fetch all tracks from playlist
-// TODO: Look into getting all tracks in a playlist at once with Promise.all and some fiddling with the URL from the next property
 export const getAllTracksFromPlaylist = async (playlistName) => {
   const tracks = [];
   const playlistUrl = new URL("https://api.spotify.com/v1/me/playlists");
