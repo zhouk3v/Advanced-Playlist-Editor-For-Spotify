@@ -46,7 +46,7 @@ const InfiniteScroll = ({ type, items, next }) => {
             return (
               <TrackItem
                 key={listItem.uri}
-                index={index}
+                index={index + 1}
                 trackName={listItem.name}
                 albumName={listItem.album.name}
                 artistName={listItem.artists[0].name}

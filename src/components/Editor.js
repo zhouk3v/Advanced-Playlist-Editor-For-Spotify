@@ -38,7 +38,7 @@ const Editor = ({ logout }) => {
       <form className="form" onSubmit={handleSubmit}>
         <textarea className="query-textbox" onChange={handleChange} />
         <div>
-          <button>Submit</button>
+          <button className="submit-button">Submit</button>
         </div>
       </form>
     </div>
