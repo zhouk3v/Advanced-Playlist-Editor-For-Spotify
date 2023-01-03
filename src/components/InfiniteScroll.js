@@ -40,26 +40,27 @@ const InfiniteScroll = ({ type, items, next }) => {
   return (
     <div onScroll={handleScroll} className="query-results" ref={listInnerRef}>
       <table className="query-results-table">
-        {listItems.map((listItem, index) => {
-          if (type === "tracks") {
-            console.log(listItem);
-            return (
-              <TrackItem
-                key={listItem.uri}
-                index={index + 1}
-                trackName={listItem.name}
-                albumName={listItem.album.name}
-                artistName={listItem.artists[0].name}
-              />
-            );
-          } else {
-            return (
-              <tr key={listItem.id}>
-                <td>{listItem.name}</td>
-              </tr>
-            );
-          }
-        })}
+        <tbody>
+          {listItems.map((listItem, index) => {
+            if (type === "tracks") {
+              return (
+                <TrackItem
+                  key={listItem.uri}
+                  index={index + 1}
+                  trackName={listItem.name}
+                  albumName={listItem.album.name}
+                  artistName={listItem.artists[0].name}
+                />
+              );
+            } else {
+              return (
+                <tr key={listItem.id}>
+                  <td>{listItem.name}</td>
+                </tr>
+              );
+            }
+          })}
+        </tbody>
       </table>
       {isFetching && "Fetching more list items..."}
     </div>
