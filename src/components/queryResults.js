@@ -1,4 +1,3 @@
-// TODO: Implement infinite scroll with results
 import React from "react";
 
 import "./css/QueryResults.css";

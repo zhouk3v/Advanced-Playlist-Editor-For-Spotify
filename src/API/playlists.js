@@ -1,5 +1,6 @@
 import { getJSON, getToken } from "./api";
 import { splitIntoChunks } from "./util";
+import localforage from "localforage";
 
 const getPlaylistId = async (playlistName) => {
   const playlistUrl = new URL("https://api.spotify.com/v1/me/playlists");
@@ -47,6 +48,8 @@ export const deletePlaylists = async (playlist) => {
       Authorization: `Bearer ${token}`,
     },
   });
+  // Invalidate the playlist in the cache as it no longer "exists"
+  await localforage.removeItem(`playlist-${playlist}`);
 };
 
 export const editPlaylist = async (playlist, tracks, methodType) => {
@@ -73,4 +76,6 @@ export const editPlaylist = async (playlist, tracks, methodType) => {
       }),
     });
   }
+  // Invalidate the playlist in the cache as its contents have changed
+  await localforage.removeItem(`playlist-${playlist}`);
 };

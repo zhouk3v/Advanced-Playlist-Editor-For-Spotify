@@ -1,6 +1,7 @@
 //TODO: relax case sensitivity when checking names
 import { getJSON } from "./api";
 import { splitIntoChunks } from "./util";
+import localforage from "localforage";
 
 export const getTracksFromArtist = async (artist) => {
   const tracks = [];
@@ -23,7 +24,6 @@ export const getTracksFromArtist = async (artist) => {
     `https://api.spotify.com/v1/artists/${artistId}/albums?include_groups=album,single,compilation`
   );
   // Fetch the artist's albums, 20 albums at a time (since this is the max limit to the get several albums endpoint)
-  // TODO: Look into executing mutliple get artist albums and get several album calls via Promise.all
   do {
     // Fetch the first page of the artist's album
     const albumIds = [];
@@ -92,20 +92,33 @@ export const getTracksFromAlbums = async (albums) => {
 export const getAllTracksFromPlaylist = async (playlistName) => {
   const tracks = [];
   const playlistUrl = new URL("https://api.spotify.com/v1/me/playlists");
-  const playlistRes = await getJSON(playlistUrl);
-  const playlistObj = playlistRes.items.find(
-    (playlist) => playlist.name === playlistName
-  );
-  if (!playlistObj) {
+  try {
+    // Check if the playlist is cached
+    const cachedPlaylist = await localforage.getItem(
+      `playlist-${playlistName}`
+    );
+    console.log(cachedPlaylist);
+    if (cachedPlaylist) {
+      return cachedPlaylist;
+    }
+    const playlistRes = await getJSON(playlistUrl);
+    const playlistObj = playlistRes.items.find(
+      (playlist) => playlist.name === playlistName
+    );
+    if (!playlistObj) {
+      return tracks;
+    }
+    let tracksUrl = playlistObj.tracks.href;
+    while (tracksUrl) {
+      const trackPageJson = await getJSON(tracksUrl);
+      trackPageJson.items.forEach((trackObj) => tracks.push(trackObj.track));
+      tracksUrl = trackPageJson.next;
+    }
+    await localforage.setItem(`playlist-${playlistName}`, tracks);
     return tracks;
+  } catch (e) {
+    throw e;
   }
-  let tracksUrl = playlistObj.tracks.href;
-  while (tracksUrl) {
-    const trackPageJson = await getJSON(tracksUrl);
-    trackPageJson.items.forEach((trackObj) => tracks.push(trackObj.track));
-    tracksUrl = trackPageJson.next;
-  }
-  return tracks;
 };
 
 // Fetch the first page of tracks from a playlist, this is used in infinite scrolling for the editor

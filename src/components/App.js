@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import crypto from "crypto";
+import localforage from "localforage";
 
 import Editor from "./Editor";
 
@@ -41,8 +42,9 @@ const storeToken = (json) => {
   localStorage.setItem("expiresin", json.expires_in);
 };
 
-const logout = () => {
+const logout = async () => {
   localStorage.clear();
+  await localforage.clear();
   window.location.reload();
 };
 

@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Parser from "../parser/parser";
 import QueryResults from "./QueryResults";
+import localforage from "localforage";
 import "./css/Editor.css";
 
 const Editor = ({ logout }) => {
@@ -27,6 +28,14 @@ const Editor = ({ logout }) => {
     setQueryType(queryAST.type);
     setResult(queryResult);
   };
+
+  useEffect(() => {
+    const clearCache = async () => {
+      await localforage.clear();
+      console.log("cache reset");
+    };
+    clearCache();
+  }, []);
 
   return (
     <div className="editor">

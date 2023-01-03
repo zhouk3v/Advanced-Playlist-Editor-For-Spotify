@@ -3,7 +3,6 @@ import { getJSON } from "../API/api";
 import "./css/InfiniteScroll.css";
 import { TrackItem } from "./listitems/trackItem";
 
-// TODO: fix last page duplication
 const InfiniteScroll = ({ type, items, next }) => {
   const [listItems, setListItems] = useState(items);
   const [nextUrl, setNextUrl] = useState(next);
@@ -45,7 +44,7 @@ const InfiniteScroll = ({ type, items, next }) => {
             if (type === "tracks") {
               return (
                 <TrackItem
-                  key={listItem.uri}
+                  key={`${listItem.uri} - ${index}`}
                   index={index + 1}
                   trackName={listItem.name}
                   albumName={listItem.album.name}
