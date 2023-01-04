@@ -31,6 +31,7 @@ button {
 }
 
 .query-textbox {
+  margin: 10px;
   flex-grow: 1;
   height: 100px;
   resize: none;
@@ -41,6 +42,7 @@ button {
 }
 
 .submit-button {
+  margin: 5px;
   padding-top: 10px;
   padding-bottom: 10px;
   padding-left: 20px;

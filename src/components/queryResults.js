@@ -40,7 +40,7 @@ const QueryResults = ({ type, results }) => {
     case "Search":
       return renderSearchQuery();
     default:
-      return <div>Waiting for a query</div>;
+      return <div className="default">Waiting for a query</div>;
   }
 };
 

@@ -1,3 +1,13 @@
+th {
+  text-align: left;
+  padding-left: 5px;
+  padding-bottom: 10px;
+}
+
+tr:nth-child(even) {
+  background-color: rgb(7, 7, 7);
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;

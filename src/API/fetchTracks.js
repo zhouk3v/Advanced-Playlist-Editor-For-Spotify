@@ -5,6 +5,7 @@ import localforage from "localforage";
 
 export const getTracksFromArtist = async (artist) => {
   // Fetch the artist's tracks from cache first
+  // TODO: Refactor to cache albums too
   const cachedTracks = await localforage.getItem(`artist-${artist}`);
   if (cachedTracks) {
     return cachedTracks;
@@ -57,8 +58,9 @@ export const getTracksFromArtist = async (artist) => {
 
 export const getTracksFromAlbums = async (albums) => {
   const tracks = [];
-  // fetch the cached albums first
-  for (let i = 0; i < albums.length; i++) {}
+
+  // TODO: Add caching for albums
+
   // search for each album to get their ids
   const albumIds = [];
   for (let i = 0; i < albums.length; i++) {
@@ -101,14 +103,14 @@ export const getAllTracksFromPlaylist = async (playlistName) => {
   const tracks = [];
   const playlistUrl = new URL("https://api.spotify.com/v1/me/playlists");
   try {
-    // Check if the playlist is cached
+    // Check if the playlist is cached, if so, return the cached playlist
     const cachedPlaylist = await localforage.getItem(
       `playlist-${playlistName}`
     );
-    console.log(cachedPlaylist);
     if (cachedPlaylist) {
       return cachedPlaylist;
     }
+    // Get the user's saved playlists and search by name
     const playlistRes = await getJSON(playlistUrl);
     const playlistObj = playlistRes.items.find(
       (playlist) => playlist.name === playlistName
@@ -116,12 +118,14 @@ export const getAllTracksFromPlaylist = async (playlistName) => {
     if (!playlistObj) {
       return tracks;
     }
+    // Grab the tracks on the playlist, iterating through each page
     let tracksUrl = playlistObj.tracks.href;
     while (tracksUrl) {
       const trackPageJson = await getJSON(tracksUrl);
       trackPageJson.items.forEach((trackObj) => tracks.push(trackObj.track));
       tracksUrl = trackPageJson.next;
     }
+    // Cache the result
     await localforage.setItem(`playlist-${playlistName}`, tracks);
     return tracks;
   } catch (e) {

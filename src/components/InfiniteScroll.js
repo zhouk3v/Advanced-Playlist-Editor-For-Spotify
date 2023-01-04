@@ -39,6 +39,14 @@ const InfiniteScroll = ({ type, items, next }) => {
   return (
     <div onScroll={handleScroll} className="query-results" ref={listInnerRef}>
       <table className="query-results-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Track Name</th>
+            <th>Album</th>
+            <th>Artists</th>
+          </tr>
+        </thead>
         <tbody>
           {listItems.map((listItem, index) => {
             if (type === "tracks") {
