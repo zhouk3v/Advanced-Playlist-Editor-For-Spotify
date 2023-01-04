@@ -4,6 +4,11 @@ import { splitIntoChunks } from "./util";
 import localforage from "localforage";
 
 export const getTracksFromArtist = async (artist) => {
+  // Fetch the artist's tracks from cache first
+  const cachedTracks = await localforage.getItem(`artist-${artist}`);
+  if (cachedTracks) {
+    return cachedTracks;
+  }
   const tracks = [];
   // Search for the artist by name in the api
   const searchUrl = new URL("https://api.spotify.com/v1/search");
@@ -46,11 +51,14 @@ export const getTracksFromArtist = async (artist) => {
     // Grab the url of the next page of albums
     artistAlbumsUrl = artistAlbums.next;
   } while (artistAlbumsUrl);
+  await localforage.setItem(`artist-${artist}`, tracks);
   return tracks;
 };
 
 export const getTracksFromAlbums = async (albums) => {
   const tracks = [];
+  // fetch the cached albums first
+  for (let i = 0; i < albums.length; i++) {}
   // search for each album to get their ids
   const albumIds = [];
   for (let i = 0; i < albums.length; i++) {
