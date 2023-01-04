@@ -45,9 +45,7 @@ const Editor = ({ logout }) => {
             id="enable-duplicates"
             name="enable-duplicates"
           ></input>
-          <label for="enable-duplicates">
-            Enable Duplicate Songs in Playlists
-          </label>
+          <label>Enable Duplicate Songs in Playlists</label>
         </div>
         <button onClick={logout}>Logout</button>
       </div>
