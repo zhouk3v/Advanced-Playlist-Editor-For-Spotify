@@ -32,6 +32,7 @@ const sha256 = (buffer) => {
   return crypto.createHash("sha256").update(buffer).digest();
 };
 
+// TODO: Move token generation code into API
 const storeToken = (json) => {
   // Store the time that we get the access token
   localStorage.setItem("tokenObtainTime", Date.now());

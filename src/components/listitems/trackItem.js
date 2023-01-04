@@ -5,6 +5,7 @@ const ArtistLinks = ({ artists }) => {
   return (
     <td className="artist">
       <a
+        key={`${artists[0].name} 0`}
         href={artists[0].external_urls.spotify}
         target="_blank"
         rel="noreferrer"
@@ -13,7 +14,7 @@ const ArtistLinks = ({ artists }) => {
       </a>
       {artists.map((artist, index) => {
         return index > 0 ? (
-          <>
+          <span key={`${artist.name} ${index}`}>
             ,{" "}
             <a
               href={artist.external_urls.spotify}
@@ -22,7 +23,7 @@ const ArtistLinks = ({ artists }) => {
             >
               {artist.name}
             </a>
-          </>
+          </span>
         ) : null;
       })}
     </td>
@@ -54,7 +55,6 @@ export const TrackItem = ({ index, track }) => {
         </a>
       </td>
       <ArtistLinks artists={track.artists} />
-      {/* <td>{artistsNames}</td> */}
     </tr>
   );
 };
