@@ -11,7 +11,7 @@ const Editor = ({ logout }) => {
     items: [],
     url: null,
   });
-  const [loading, setLoading] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const parser = new Parser();
 
@@ -40,10 +40,25 @@ const Editor = ({ logout }) => {
   return (
     <div className="editor">
       <div className="header">
-        <div>{loading}</div>
+        <div>
+          <input
+            type="checkbox"
+            id="enable-duplicates"
+            name="enable-duplicates"
+          ></input>
+          <label for="enable-duplicates">
+            Enable Duplicate Songs in Playlists
+          </label>
+        </div>
         <button onClick={logout}>Logout</button>
       </div>
-      <QueryResults type={queryType} results={result}></QueryResults>
+      {loading ? (
+        <div className="loader-container">
+          <div className="loader"></div>
+        </div>
+      ) : (
+        <QueryResults type={queryType} results={result}></QueryResults>
+      )}
       <form className="form" onSubmit={handleSubmit}>
         <textarea className="query-textbox" onChange={handleChange} />
         <div>
