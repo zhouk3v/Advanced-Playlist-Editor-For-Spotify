@@ -32,7 +32,6 @@ const Editor = ({ logout }) => {
   useEffect(() => {
     const clearCache = async () => {
       await localforage.clear();
-      console.log("cache reset");
     };
     clearCache();
   }, []);

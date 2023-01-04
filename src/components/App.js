@@ -127,7 +127,6 @@ const App = () => {
       const tokenObtainTime = parseInt(localStorage.getItem("tokenObtainTime"));
       const expires_in_sec = parseInt(localStorage.getItem("expiresin")) * 1000;
       if (Date.now() > tokenObtainTime + expires_in_sec) {
-        console.log("Token expired");
         generateRefreshToken();
       } else {
         setToken(localStorage.getItem("accesstoken"));
