@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import crypto from "crypto";
 import localforage from "localforage";
+
+import Login from "./Login";
 
 import Editor from "./Editor";
 
@@ -20,18 +21,6 @@ const scopes = [
   "user-read-email",
 ];
 
-const base64Encode = (str) => {
-  return str
-    .toString("base64")
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=/g, "");
-};
-
-const sha256 = (buffer) => {
-  return crypto.createHash("sha256").update(buffer).digest();
-};
-
 // TODO: Move token generation code into API
 const storeToken = (json) => {
   // Store the time that we get the access token
@@ -49,6 +38,32 @@ const logout = async () => {
   window.location.reload();
 };
 
+const generateRandomString = (length) => {
+  let text = "";
+  let possible =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};
+
+const base64Encode = (string) => {
+  return btoa(String.fromCharCode.apply(null, new Uint8Array(string)))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/, "");
+};
+
+const generateCodeChallenge = async (codeVerifier) => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(codeVerifier);
+  const digest = await window.crypto.subtle.digest("SHA-256", data);
+
+  return base64Encode(digest);
+};
+
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem("accesstoken"));
   const [validState, setValidState] = useState(true);
@@ -57,6 +72,15 @@ const App = () => {
   const [isRedirect, setIsRedirect] = useState(false);
 
   useEffect(() => {
+    const generateURLparams = async () => {
+      const state = generateRandomString(16);
+      setUrlState(state);
+      sessionStorage.setItem("state", state);
+      const codeVerifier = generateRandomString(128);
+      sessionStorage.setItem("codeVerifier", codeVerifier);
+      const codeChallenge = await generateCodeChallenge(codeVerifier);
+      setCodeChallenge(codeChallenge);
+    };
     const generateNewToken = async (code) => {
       // Grab the code verifier from session storage
       const codeVerifier = sessionStorage.getItem("codeVerifier");
@@ -116,12 +140,7 @@ const App = () => {
         }
       } else {
         // Generate state and code challenge
-        const newUrlState = base64Encode(crypto.randomBytes(30));
-        setUrlState(newUrlState);
-        sessionStorage.setItem("state", newUrlState); // store our state in session storage so that we can verify it later
-        const codeVerifier = base64Encode(crypto.randomBytes(32));
-        sessionStorage.setItem("codeVerifier", codeVerifier);
-        setCodeChallenge(base64Encode(sha256(codeVerifier)));
+        generateURLparams();
       }
     } else {
       // Check if our token has expired
@@ -140,13 +159,14 @@ const App = () => {
       {!validState && <p>ERROR: received invalid state from Spotify API</p>}
       {validState && !token && isRedirect && <p>Loading</p>}
       {validState && !token && !isRedirect && (
-        <a
-          href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-            "%20"
-          )}&response_type=code&show_dialog=true&state=${urlState}&code_challenge_method=S256&code_challenge=${codeChallenge}`}
-        >
-          Login to Spotify
-        </a>
+        <Login
+          authEndpoint={authEndpoint}
+          clientId={clientId}
+          redirectUri={redirectUri}
+          urlState={urlState}
+          codeChallenge={codeChallenge}
+          scopes={scopes}
+        />
       )}
       {validState && token && <Editor logout={logout} />}
     </div>
