@@ -1,7 +1,37 @@
 import React, { useState, useRef, useEffect } from "react";
 import { getJSON } from "../API/api";
 import "./css/InfiniteScroll.css";
-import { TrackItem } from "./listitems/TrackItem";
+import { Table, AutoSizer, Column } from "react-virtualized";
+import "react-virtualized/styles.css";
+
+const ArtistLinks = ({ artists }) => {
+  return (
+    <>
+      <a
+        key={`${artists[0].name} 0`}
+        href={artists[0].external_urls.spotify}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {artists[0].name}
+      </a>
+      {artists.map((artist, index) => {
+        return index > 0 ? (
+          <span key={`${artist.name} ${index}`}>
+            ,{" "}
+            <a
+              href={artist.external_urls.spotify}
+              target="_blank"
+              rel="noreferrer"
+            >
+              {artist.name}
+            </a>
+          </span>
+        ) : null;
+      })}
+    </>
+  );
+};
 
 const InfiniteScroll = ({ type, items, next }) => {
   const [listItems, setListItems] = useState(items);
@@ -36,37 +66,69 @@ const InfiniteScroll = ({ type, items, next }) => {
     fetchNextPage();
   }, [isFetching, listItems, nextUrl]);
 
+  console.log(listItems);
+
   return (
     <div onScroll={handleScroll} className="query-results" ref={listInnerRef}>
-      <table className="query-results-table">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Track Name</th>
-            <th>Album</th>
-            <th>Artists</th>
-          </tr>
-        </thead>
-        <tbody>
-          {listItems.map((listItem, index) => {
-            if (type === "tracks") {
-              return (
-                <TrackItem
-                  key={`${listItem.uri} - ${index}`}
-                  index={index + 1}
-                  track={listItem}
-                />
-              );
-            } else {
-              return (
-                <tr key={listItem.id}>
-                  <td>{listItem.name}</td>
-                </tr>
-              );
-            }
-          })}
-        </tbody>
-      </table>
+      <AutoSizer>
+        {({ width, height }) => (
+          <Table
+            height={height}
+            width={width}
+            rowCount={listItems.length}
+            rowHeight={30}
+            headerHeight={20}
+            rowGetter={({ index }) => listItems[index]}
+          >
+            <Column
+              label=""
+              cellRenderer={({ rowIndex }) => rowIndex + 1}
+              dataKey="index"
+              width={100}
+            />
+            <Column
+              label="Track"
+              dataKey="name"
+              width={300}
+              flexGrow={3}
+              cellRenderer={({ rowData }) => (
+                <a
+                  href={rowData.external_urls.spotify}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {rowData.name}
+                </a>
+              )}
+            />
+            <Column
+              label="Album"
+              dataKey="album"
+              width={100}
+              flexGrow={1}
+              cellRenderer={({ rowData }) => (
+                <a
+                  href={rowData.album.external_urls.spotify}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {rowData.album.name}
+                </a>
+              )}
+            />
+            <Column
+              label="Artists"
+              dataKey="album"
+              width={200}
+              flexGrow={2}
+              cellRenderer={({ rowData }) => (
+                <ArtistLinks artists={rowData.artists} />
+              )}
+            />
+          </Table>
+        )}
+      </AutoSizer>
+
       {isFetching && "Fetching more list items..."}
     </div>
   );
