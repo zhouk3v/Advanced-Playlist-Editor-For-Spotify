@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { getJSON } from "../API/api";
+import { getJSON } from "../../API/api";
 import "./css/InfiniteScroll.css";
-import { TrackItem } from "./listitems/TrackItem";
+import { TrackItem } from "./tableRows/TrackRow";
 
 const InfiniteScroll = ({ type, items, next }) => {
   const [listItems, setListItems] = useState(items);
