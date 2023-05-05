@@ -1,11 +1,17 @@
 import React from "react";
+import {
+  Table,
+  AutoSizer,
+  Column,
+  CellMeasurer,
+  CellMeasurerCache,
+} from "react-virtualized";
 import "./css/TracksTable.css";
-import { Table, AutoSizer, Column } from "react-virtualized";
 import "react-virtualized/styles.css";
 
-const ArtistLinks = ({ artists }) => {
+const ArtistLinks = ({ artists, onResize }) => {
   return (
-    <>
+    <div onResize={onResize}>
       <a
         key={`${artists[0].name} 0`}
         href={artists[0].external_urls.spotify}
@@ -28,67 +34,166 @@ const ArtistLinks = ({ artists }) => {
           </span>
         ) : null;
       })}
-    </>
+    </div>
   );
 };
 
+// const CellRenderer = (cache, parent, dataKey, rowIndex, children) => (
+//   <CellMeasurer
+//     cache={cache}
+//     columnIndex={0}
+//     parent={parent}
+//     key={dataKey}
+//     rowIndex={rowIndex}
+//   >
+//     <div
+//       style={{
+//         whiteSpace: "normal",
+//       }}
+//     >
+//       {children}
+//     </div>
+//   </CellMeasurer>
+// );
+
 const TracksTable = ({ items }) => {
-  console.log(items);
+  const cache = new CellMeasurerCache({
+    fixedWidth: true,
+    minHeight: 30,
+  });
+
   return (
     <div className="query-results">
       <AutoSizer>
         {({ width, height }) => (
           <Table
+            deferredMeasurementCache={cache}
             height={height}
             width={width}
             rowCount={items.length}
-            rowHeight={30}
+            rowHeight={cache.rowHeight}
             headerHeight={20}
             rowGetter={({ index }) => items[index]}
           >
             <Column
               label=""
-              cellRenderer={({ rowIndex }) => rowIndex + 1}
               dataKey="index"
+              cellRenderer={({ parent, rowIndex, dataKey }) => (
+                <CellMeasurer
+                  cache={cache}
+                  columnIndex={0}
+                  parent={parent}
+                  key={dataKey}
+                  rowIndex={rowIndex}
+                >
+                  {({ measure, registerChild }) => (
+                    <div
+                      ref={registerChild}
+                      onResize={measure}
+                      style={{
+                        whiteSpace: "normal",
+                      }}
+                    >
+                      {rowIndex + 1}
+                    </div>
+                  )}
+                </CellMeasurer>
+              )}
               width={100}
             />
             <Column
               label="Track"
               dataKey="name"
-              width={250}
-              flexGrow={3}
-              cellRenderer={({ rowData }) => (
-                <a
-                  href={rowData.external_urls.spotify}
-                  target="_blank"
-                  rel="noreferrer"
+              width={200}
+              flexGrow={2}
+              cellRenderer={({ rowData, parent, rowIndex, dataKey }) => (
+                <CellMeasurer
+                  cache={cache}
+                  columnIndex={0}
+                  parent={parent}
+                  key={dataKey}
+                  rowIndex={rowIndex}
                 >
-                  {rowData.name}
-                </a>
+                  {({ measure, registerChild }) => (
+                    <div
+                      ref={registerChild}
+                      style={{
+                        whiteSpace: "normal",
+                      }}
+                    >
+                      <a
+                        onResize={measure}
+                        href={rowData.external_urls.spotify}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {rowData.name}
+                      </a>
+                    </div>
+                  )}
+                </CellMeasurer>
               )}
             />
             <Column
               label="Album"
               dataKey="album"
-              width={150}
+              width={200}
               flexGrow={1}
-              cellRenderer={({ rowData }) => (
-                <a
-                  href={rowData.album.external_urls.spotify}
-                  target="_blank"
-                  rel="noreferrer"
+              cellRenderer={({ rowData, parent, rowIndex, dataKey }) => (
+                <CellMeasurer
+                  cache={cache}
+                  columnIndex={0}
+                  parent={parent}
+                  key={dataKey}
+                  rowIndex={rowIndex}
                 >
-                  {rowData.album.name}
-                </a>
+                  {({ measure, registerChild }) => (
+                    <div
+                      ref={registerChild}
+                      style={{
+                        whiteSpace: "normal",
+                      }}
+                    >
+                      <a
+                        href={rowData.album.external_urls.spotify}
+                        target="_blank"
+                        rel="noreferrer"
+                        onResize={measure}
+                      >
+                        {rowData.album.name}
+                      </a>
+                    </div>
+                  )}
+                </CellMeasurer>
               )}
             />
             <Column
               label="Artists"
-              dataKey="album"
+              dataKey="artists"
               width={200}
-              flexGrow={2}
-              cellRenderer={({ rowData }) => (
-                <ArtistLinks artists={rowData.artists} />
+              flexGrow={1}
+              cellRenderer={({ rowData, parent, rowIndex, dataKey }) => (
+                <CellMeasurer
+                  cache={cache}
+                  columnIndex={0}
+                  parent={parent}
+                  key={dataKey}
+                  rowIndex={rowIndex}
+                >
+                  {({ measure, registerChild }) => (
+                    <div
+                      ref={registerChild}
+                      style={{
+                        whiteSpace: "normal",
+                      }}
+                    >
+                      <ArtistLinks
+                        onResize={measure}
+                        artists={rowData.artists}
+                      />
+                    </div>
+                  )}
+                </CellMeasurer>
               )}
             />
           </Table>
