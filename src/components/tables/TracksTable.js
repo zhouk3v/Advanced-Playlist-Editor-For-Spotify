@@ -1,6 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-import { getJSON } from "../API/api";
-import "./css/InfiniteScroll.css";
+import React from "react";
+import "./css/TracksTable.css";
 import { Table, AutoSizer, Column } from "react-virtualized";
 import "react-virtualized/styles.css";
 
@@ -33,52 +32,19 @@ const ArtistLinks = ({ artists }) => {
   );
 };
 
-const InfiniteScroll = ({ type, items, next }) => {
-  const [listItems, setListItems] = useState(items);
-  const [nextUrl, setNextUrl] = useState(next);
-  const [isFetching, setIsFetching] = useState(false);
-  const listInnerRef = useRef();
-
-  const handleScroll = () => {
-    if (listInnerRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
-      if (scrollTop + clientHeight === scrollHeight && nextUrl) {
-        setIsFetching(true);
-      }
-    }
-  };
-
-  useEffect(() => {
-    setListItems(items);
-    setNextUrl(next);
-  }, [items, next]);
-
-  useEffect(() => {
-    if (!isFetching) return;
-    const fetchNextPage = async () => {
-      const items = [...listItems];
-      const nextPageJson = await getJSON(nextUrl);
-      nextPageJson.items.forEach((trackObj) => items.push(trackObj.track));
-      setListItems(items);
-      setNextUrl(nextPageJson.next);
-    };
-    setIsFetching(false);
-    fetchNextPage();
-  }, [isFetching, listItems, nextUrl]);
-
-  console.log(listItems);
-
+const TracksTable = ({ items }) => {
+  console.log(items);
   return (
-    <div onScroll={handleScroll} className="query-results" ref={listInnerRef}>
+    <div className="query-results">
       <AutoSizer>
         {({ width, height }) => (
           <Table
             height={height}
             width={width}
-            rowCount={listItems.length}
+            rowCount={items.length}
             rowHeight={30}
             headerHeight={20}
-            rowGetter={({ index }) => listItems[index]}
+            rowGetter={({ index }) => items[index]}
           >
             <Column
               label=""
@@ -128,10 +94,8 @@ const InfiniteScroll = ({ type, items, next }) => {
           </Table>
         )}
       </AutoSizer>
-
-      {isFetching && "Fetching more list items..."}
     </div>
   );
 };
 
-export default InfiniteScroll;
+export default TracksTable;
