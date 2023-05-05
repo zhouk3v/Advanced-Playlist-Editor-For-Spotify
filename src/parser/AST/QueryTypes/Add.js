@@ -1,5 +1,5 @@
 import { editPlaylist } from "../../../API/playlists";
-import { getFirstPageOfPlaylist } from "../../../API/fetchTracks";
+import { getAllTracksFromPlaylist } from "../../../API/fetchTracks";
 import { ADD } from "../../config";
 
 class Add {
@@ -19,8 +19,11 @@ class Add {
       );
       await editPlaylist(this.playlist, filteredTracks, ADD);
     }
-    const newPlaylist = await getFirstPageOfPlaylist(this.playlist);
-    return newPlaylist;
+    const newPlaylist = await getAllTracksFromPlaylist(this.playlist);
+    return {
+      items: newPlaylist,
+      url: null,
+    };
   }
 }
 

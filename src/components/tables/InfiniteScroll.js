@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { getJSON } from "../API/api";
+import { getJSON } from "../../API/api";
 import "./css/InfiniteScroll.css";
 import { TrackItem } from "./listitems/TrackItem";
 

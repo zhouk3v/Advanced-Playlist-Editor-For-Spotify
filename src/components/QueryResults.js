@@ -1,18 +1,13 @@
 import React from "react";
 
 import "./css/QueryResults.css";
-import InfiniteScroll from "./InfiniteScroll";
+import InfiniteScroll from "./tables/InfiniteScroll";
+import TrackTable from "./tables/TrackTable";
 
 const QueryResults = ({ type, results }) => {
   // Render the result of a get, add or deletetrack query
   const renderTracksQuery = () => {
-    return (
-      <InfiniteScroll
-        type="tracks"
-        items={results.items}
-        next={results.url}
-      ></InfiniteScroll>
-    );
+    return <TrackTable items={results.items} />;
   };
   // Render the result of a create playlist or delete playlist query
   const renderPlaylistQuery = () => {

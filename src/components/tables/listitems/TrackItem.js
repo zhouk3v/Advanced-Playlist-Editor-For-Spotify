@@ -1,5 +1,5 @@
 import React from "react";
-import "./css/trackItem.css";
+import "./css/TrackItem.css";
 
 const ArtistLinks = ({ artists }) => {
   return (
@@ -31,30 +31,30 @@ const ArtistLinks = ({ artists }) => {
 };
 
 export const TrackItem = ({ index, track }) => {
-  let artistsNames = track.artists[0].name;
-  track.artists.forEach((artist, index) => {
-    if (index > 0) {
-      artistsNames = artistsNames + `, ${artist.name}`;
-    }
-  });
   return (
-    <tr className="track">
-      <td className="index">{index}</td>
-      <td className="name">
-        <a href={track.external_urls.spotify} target="_blank" rel="noreferrer">
-          {track.name}
-        </a>
-      </td>
-      <td className="album">
-        <a
-          href={track.album.external_urls.spotify}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {track.album.name}
-        </a>
-      </td>
-      <ArtistLinks artists={track.artists} />
-    </tr>
+    <>
+      <tr>
+        <td className="index">{index}</td>
+        <td className="name">
+          <a
+            href={track.external_urls.spotify}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {track.name}
+          </a>
+        </td>
+        <td className="album">
+          <a
+            href={track.album.external_urls.spotify}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {track.album.name}
+          </a>
+        </td>
+        <ArtistLinks artists={track.artists} />
+      </tr>
+    </>
   );
 };
