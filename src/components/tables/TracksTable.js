@@ -55,7 +55,7 @@ const TracksTable = ({ items }) => {
             <Column
               label="Track"
               dataKey="name"
-              width={300}
+              width={250}
               flexGrow={3}
               cellRenderer={({ rowData }) => (
                 <a
@@ -70,7 +70,7 @@ const TracksTable = ({ items }) => {
             <Column
               label="Album"
               dataKey="album"
-              width={100}
+              width={150}
               flexGrow={1}
               cellRenderer={({ rowData }) => (
                 <a
