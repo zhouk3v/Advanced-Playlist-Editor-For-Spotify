@@ -1,6 +1,13 @@
 import React from "react";
 import "./css/TrackTable.css";
 import { TrackItem } from "./tableRows/TrackRow";
+import { FixedSizeList } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
+
+
+const Row = ({ index, style }) => (
+
+);
 
 const TrackTable = ({ items }) => {
   return (
@@ -15,15 +22,11 @@ const TrackTable = ({ items }) => {
           </tr>
         </thead>
         <tbody>
-          {items.map((listItem, index) => {
-            return (
-              <TrackItem
-                key={`${listItem.uri} - ${index}`}
-                index={index + 1}
-                track={listItem}
-              />
-            );
-          })}
+          <AutoSizer>{(height, width) => (
+            <FixedSizeList>
+
+            </FixedSizeList>
+          )}</AutoSizer>
         </tbody>
       </table>
     </div>
