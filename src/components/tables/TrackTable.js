@@ -93,36 +93,42 @@ const TrackTable = ({ items }) => {
   });
 
   return (
-    <div className="query-results">
-      <table className="query-results-table">
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="table">
+      {table.getHeaderGroups().map((headerGroup) => {
+        return headerGroup.headers.map((header, index) => {
+          return (
+            <div
+              className="table-header"
+              key={header.id}
+              style={{
+                gridColumn: index + 1,
+              }}
+            >
+              {header.isPlaceholder
+                ? null
+                : flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+            </div>
+          );
+        });
+      })}
+      {table.getRowModel().rows.map((row) => {
+        return row.getVisibleCells().map((cell, index) => {
+          return (
+            <div
+              key={cell.id}
+              style={{
+                gridColumn: index + 1,
+                padding: 5,
+              }}
+            >
+              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+            </div>
+          );
+        });
+      })}
     </div>
   );
 };
