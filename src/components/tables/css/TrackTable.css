@@ -2,6 +2,10 @@ tr:nth-child(even) {
   background-color: rgb(7, 7, 7);
 }
 
+th {
+  background-color: black;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
