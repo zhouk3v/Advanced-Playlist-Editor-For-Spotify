@@ -94,12 +94,12 @@ const TrackTable = ({ items }) => {
 
   return (
     <div className="table">
-      {table.getHeaderGroups().map((headerGroup) => {
-        return headerGroup.headers.map((header, index) => {
-          return (
+      {table.getHeaderGroups().map((headerGroup) => (
+        <div key={headerGroup.id} className="table-row">
+          {headerGroup.headers.map((header, index) => (
             <div
-              className="table-header"
               key={header.id}
+              className="table-header"
               style={{
                 gridColumn: index + 1,
               }}
@@ -111,24 +111,24 @@ const TrackTable = ({ items }) => {
                     header.getContext()
                   )}
             </div>
-          );
-        });
-      })}
-      {table.getRowModel().rows.map((row) => {
-        return row.getVisibleCells().map((cell, index) => {
-          return (
+          ))}
+        </div>
+      ))}
+      {table.getRowModel().rows.map((row) => (
+        <div key={row.id} className="table-row">
+          {row.getVisibleCells().map((cell, index) => (
             <div
               key={cell.id}
+              className="table-cell"
               style={{
                 gridColumn: index + 1,
-                padding: 5,
               }}
             >
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </div>
-          );
-        });
-      })}
+          ))}
+        </div>
+      ))}
     </div>
   );
 };

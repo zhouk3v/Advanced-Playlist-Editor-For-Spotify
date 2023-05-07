@@ -11,14 +11,23 @@
 
 .table {
   display: grid;
-  overflow: scroll;
+  overflow-y: scroll;
   grid-template-columns: auto auto auto auto;
+  gap: 0 1em;
 }
 
 .table-header {
-  padding: 5px;
+  padding: 7px;
   position: sticky;
   z-index: 1;
   top: 0;
   background: black;
+}
+
+.table-row {
+  display: contents;
+}
+
+.table-cell {
+  padding: 7px;
 }
