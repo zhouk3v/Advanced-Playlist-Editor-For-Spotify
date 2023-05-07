@@ -1,9 +1,9 @@
 import React from "react";
 import "./css/TrackItem.css";
 
-const ArtistLinks = ({ artists }) => {
+const ArtistLinks = ({ artists, style }) => {
   return (
-    <td className="artist">
+    <td className="artist" style={style}>
       <a
         key={`${artists[0].name} 0`}
         href={artists[0].external_urls.spotify}
@@ -33,28 +33,22 @@ const ArtistLinks = ({ artists }) => {
 export const TrackItem = ({ index, track }) => {
   return (
     <>
-      <tr>
-        <td className="index">{index}</td>
-        <td className="name">
-          <a
-            href={track.external_urls.spotify}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {track.name}
-          </a>
-        </td>
-        <td className="album">
-          <a
-            href={track.album.external_urls.spotify}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {track.album.name}
-          </a>
-        </td>
-        <ArtistLinks artists={track.artists} />
-      </tr>
+      <td className="index">{index}</td>
+      <td className="name">
+        <a href={track.external_urls.spotify} target="_blank" rel="noreferrer">
+          {track.name}
+        </a>
+      </td>
+      <td className="album">
+        <a
+          href={track.album.external_urls.spotify}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {track.album.name}
+        </a>
+      </td>
+      <ArtistLinks artists={track.artists} />
     </>
   );
 };

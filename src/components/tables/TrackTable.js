@@ -29,14 +29,14 @@ const TrackTable = ({ items }) => {
     <TableVirtuoso
       className="track-table"
       data={items}
-      fixedHeaderContent={() => {
-        <tr>
+      fixedHeaderContent={() => (
+        <tr style={{ background: "black" }}>
           <th>Index</th>
-          <th>Track Name</th>
-          <th>Album</th>
-          <th>Artists</th>
-        </tr>;
-      }}
+          <th style={{ width: width * 0.5 }}>Track Name</th>
+          <th style={{ width: width * 0.25 }}>Album</th>
+          <th style={{ width: width * 0.25 }}>Artists</th>
+        </tr>
+      )}
       itemContent={(index, track) => (
         <TrackItem
           key={`${track.uri} - ${index}`}
