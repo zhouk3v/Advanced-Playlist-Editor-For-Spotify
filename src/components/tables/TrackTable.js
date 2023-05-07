@@ -125,7 +125,7 @@ const TrackTable = ({ items }) => {
         </tbody>
       </table> */}
       <TableVirtuoso
-        style={{ height: 400 }}
+        style={{ height: window.innerHeight - 196 }}
         data={rows}
         fixedHeaderContent={() => {
           return table.getHeaderGroups().map((headerGroup) => (
