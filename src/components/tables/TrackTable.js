@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { FixedSizeList } from "react-window";
+import { TableVirtuoso } from "react-virtuoso";
 import {
   flexRender,
   getCoreRowModel,
@@ -92,9 +91,11 @@ const TrackTable = ({ items }) => {
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const rows = table.getRowModel().rows;
+
   return (
     <div className="query-results">
-      <table className="query-results-table">
+      {/* <table className="query-results-table">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -122,7 +123,36 @@ const TrackTable = ({ items }) => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
+      <TableVirtuoso
+        style={{ height: 400 }}
+        data={rows}
+        fixedHeaderContent={() => {
+          return table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <th key={header.id}>
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                </th>
+              ))}
+            </tr>
+          ));
+        }}
+        itemContent={(_, row) => (
+          <>
+            {row.getVisibleCells().map((cell) => (
+              <td key={cell.id}>
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </td>
+            ))}
+          </>
+        )}
+      />
     </div>
   );
 };
