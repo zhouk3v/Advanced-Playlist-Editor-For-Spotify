@@ -12,8 +12,8 @@
 .table {
   display: grid;
   overflow-y: scroll;
-  grid-template-columns: auto auto auto auto;
   gap: 0 1em;
+  grid-template-columns: 0fr;
 }
 
 .table-header {
