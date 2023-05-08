@@ -38,6 +38,7 @@ const Editor = ({ logout }) => {
 
   return (
     <div className="editor">
+      {/* TODO: Seperate header into another component */}
       <div className="header">
         <div>
           <input
@@ -56,6 +57,7 @@ const Editor = ({ logout }) => {
       ) : (
         <QueryResults type={queryType} results={result}></QueryResults>
       )}
+      {/* TODO: Seperate form part into another component */}
       <form className="form" onSubmit={handleSubmit}>
         <textarea className="query-textbox" onChange={handleChange} />
         <div>

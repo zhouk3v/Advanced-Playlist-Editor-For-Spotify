@@ -13,6 +13,9 @@ import orExpr from "./AST/SecondaryConditionExprs/OrExpr";
 import primaryconditions from "./AST/Conditions/PrimaryConditions";
 import search from "./AST/QueryTypes/Search";
 import secondaryconditions from "./AST/Conditions/SecondaryCondition";
+import equalsRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/EqualsRHS";
+import inRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/InRHS";
+import likeRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/LikeRHS";
 
 class Parser {
   constructor() {
@@ -352,26 +355,17 @@ class Parser {
     if (this.lexer.inspect("=")) {
       this.lexer.consume("=");
       const term = this.term();
-      return {
-        type: EQUALS_CONDITION,
-        term: term,
-      };
+      return new equalsRHS(term);
     } else if (this.lexer.inspect("in")) {
       this.lexer.consume("in");
       this.lexer.consume("(");
       const terms = this.terms();
       this.lexer.consume(")");
-      return {
-        type: IN_CONDITION,
-        term: terms,
-      };
+      return new inRHS(terms);
     } else if (this.lexer.inspect("like")) {
       this.lexer.consume("like");
       const term = this.term();
-      return {
-        type: REGEX_CONDITION,
-        term: term,
-      };
+      return new likeRHS(term);
     } else {
       throw new Error("Invalid condition RHS");
     }

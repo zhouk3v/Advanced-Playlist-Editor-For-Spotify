@@ -1,6 +1,6 @@
 import { Expr } from "./Expr";
 
-class AndExpr implements Expr {
+class OrExpr implements Expr {
   expr1: Expr;
   expr2: Expr;
   constructor(expr1: Expr, expr2: Expr) {
@@ -8,8 +8,8 @@ class AndExpr implements Expr {
     this.expr2 = expr2;
   }
   evaluate(track: SpotifyApi.TrackObjectFull) {
-    return this.expr1.evaluate(track) && this.expr2.evaluate(track);
+    return this.expr1.evaluate(track) || this.expr2.evaluate(track);
   }
 }
 
-export default AndExpr;
+export default OrExpr;
