@@ -7,6 +7,11 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^29.5.1",
+    "@types/node": "^20.1.0",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
+    "@types/spotify-api": "^0.0.21",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "react": "^18.0.0",
@@ -15,6 +20,7 @@
     "react-virtualized-auto-sizer": "^1.0.15",
     "react-virtuoso": "^4.3.5",
     "react-window": "^1.8.9",
+    "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
