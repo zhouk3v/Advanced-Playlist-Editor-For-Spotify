@@ -53,7 +53,7 @@ const TrackTable = ({ items }) => {
           return track.album.images.at(-1).url;
         },
         cell: (props) => {
-          return <img src={props.getValue()} alt="" width={32} height={32} />;
+          return <img src={props.getValue()} alt="" width={40} height={40} />;
         },
         header: "",
       },
@@ -108,15 +108,13 @@ const TrackTable = ({ items }) => {
       case "index":
         return "1vw";
       case "img":
-        return "32px";
+        return "40px";
       case "name":
         return "50vw";
       default:
         return "25vw";
     }
   };
-
-  console.log(rows);
 
   return (
     <TableVirtuoso
@@ -142,10 +140,13 @@ const TrackTable = ({ items }) => {
           </tr>
         ));
       }}
-      itemContent={(_, row) => (
+      itemContent={(index, row) => (
         <>
           {row.getVisibleCells().map((cell) => (
-            <td key={cell.id}>
+            <td
+              key={cell.id}
+              style={{ background: index % 2 === 1 ? "rgb(7,7,7)" : "black" }}
+            >
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </td>
           ))}
