@@ -1,5 +1,5 @@
 import { EQUALS_CONDITION, IN_CONDITION, REGEX_CONDITION } from "../../config";
-
+import { Expr } from "./Expr";
 // TODO: Determine if we should relax case-sensitivity for equals and in conditions
 class BaseCondition {
   constructor(keyword, rhs) {
