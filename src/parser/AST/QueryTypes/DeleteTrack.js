@@ -1,7 +1,4 @@
-import {
-  getFirstPageOfPlaylist,
-  getAllTracksFromPlaylist,
-} from "../../../API/fetchTracks";
+import { getAllTracksFromPlaylist } from "../../../API/fetchTracks";
 import { editPlaylist } from "../../../API/playlists";
 import { DELETE } from "../../config";
 
@@ -19,8 +16,11 @@ class DeleteTrack {
       const toDelete = tracks.filter((track) => this.secondary.evaluate(track));
       await editPlaylist(this.playlist, toDelete, DELETE);
     }
-    const remaining = await getFirstPageOfPlaylist(this.playlist);
-    return remaining;
+    const remaining = await getAllTracksFromPlaylist(this.playlist);
+    return {
+      items: remaining,
+      url: null,
+    };
   }
 }
 

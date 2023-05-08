@@ -1,5 +1,5 @@
 import React from "react";
-import "./css/trackItem.css";
+import "./css/TrackRow.css";
 
 const ArtistLinks = ({ artists }) => {
   return (
