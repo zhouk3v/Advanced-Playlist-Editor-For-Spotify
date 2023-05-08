@@ -53,7 +53,7 @@ const TrackTable = ({ items }) => {
           return track.album.images.at(-1).url;
         },
         cell: (props) => {
-          return <img src={props.getValue()} alt="" />;
+          return <img src={props.getValue()} alt="" width={32} height={32} />;
         },
         header: "",
       },
@@ -106,9 +106,9 @@ const TrackTable = ({ items }) => {
   const getHeaderWidth = (header) => {
     switch (header) {
       case "index":
-        return "50px";
+        return "1vw";
       case "img":
-        return "64px";
+        return "32px";
       case "name":
         return "50vw";
       default:
