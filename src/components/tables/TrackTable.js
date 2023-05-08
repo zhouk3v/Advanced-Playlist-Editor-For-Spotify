@@ -48,6 +48,16 @@ const TrackTable = ({ items }) => {
         header: "",
       },
       {
+        id: "img",
+        accessorFn: (track) => {
+          return track.album.images.at(-1).url;
+        },
+        cell: (props) => {
+          return <img src={props.getValue()} alt="" />;
+        },
+        header: "",
+      },
+      {
         id: "name",
         accessorFn: (track) => {
           return {
@@ -93,6 +103,21 @@ const TrackTable = ({ items }) => {
 
   const rows = table.getRowModel().rows;
 
+  const getHeaderWidth = (header) => {
+    switch (header) {
+      case "index":
+        return "50px";
+      case "img":
+        return "64px";
+      case "name":
+        return "50vw";
+      default:
+        return "25vw";
+    }
+  };
+
+  console.log(rows);
+
   return (
     <TableVirtuoso
       data={rows}
@@ -103,7 +128,7 @@ const TrackTable = ({ items }) => {
               <th
                 key={header.id}
                 style={{
-                  width: header.id === "index" ? "5vw" : "33vw",
+                  width: getHeaderWidth(header.id),
                 }}
               >
                 {header.isPlaceholder
