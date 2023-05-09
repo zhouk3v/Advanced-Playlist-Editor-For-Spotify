@@ -76,13 +76,15 @@ class lexer {
       this.index++;
       return token.slice(1, -1);
     } else {
-      throw new Error(`Unexpected token ${token}, expecting a term here`);
+      throw new Error(
+        `Unexpected token ${token}, expecting a term here, did you forget a "?`
+      );
     }
   }
 
   consumeEOF(): void {
     if (!this._inspectEOF()) {
-      throw new Error(`Expected: EOF, found: ${this.tokens[this.index]}`);
+      throw new Error(`Expected EOL, found ${this.tokens[this.index]} instead`);
     }
     return;
   }
