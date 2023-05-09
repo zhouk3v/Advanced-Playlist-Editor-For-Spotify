@@ -1,15 +1,19 @@
 // TODO: overhaul error throwing
 class lexer {
+  setChars: Set<string>;
+  assignChars: Set<string>;
+  tokens: Array<string>;
+  index: number;
   constructor() {
     this.setChars = new Set(["(", ")", ",", "[", "]"]);
     this.assignChars = new Set([":", "=", "-"]);
-  }
-
-  tokenize(input) {
-    // TODO: refactor this
-    const inputLength = input.length;
     this.tokens = [];
     this.index = 0;
+  }
+
+  tokenize(input: string): void {
+    // TODO: refactor this
+    const inputLength = input.length;
     let token = "";
     let i = 0;
     while (i < inputLength) {
@@ -46,12 +50,12 @@ class lexer {
     }
   }
 
-  inspect(toInspect) {
+  inspect(toInspect: string): boolean {
     const token = this.tokens[this.index];
     return token === toInspect;
   }
 
-  consume(toConsume) {
+  consume(toConsume: string): string {
     const token = this.tokens[this.index];
     if (token === toConsume) {
       this.index++;
@@ -61,12 +65,12 @@ class lexer {
     }
   }
 
-  inspectTerm() {
+  inspectTerm(): boolean {
     const token = this.tokens[this.index];
     return this._isTerm(token);
   }
 
-  consumeTerm() {
+  consumeTerm(): string {
     const token = this.tokens[this.index];
     if (this._isTerm(token)) {
       this.index++;
@@ -76,18 +80,18 @@ class lexer {
     }
   }
 
-  consumeEOF() {
+  consumeEOF(): void {
     if (!this._inspectEOF()) {
       throw new Error(`Expected: EOF, found: ${this.tokens[this.index]}`);
     }
     return;
   }
 
-  _inspectEOF() {
+  _inspectEOF(): boolean {
     return this.index === this.tokens.length;
   }
 
-  _isTerm(input) {
+  _isTerm(input: string): boolean {
     return input[0] === `"` && input[input.length - 1] === `"`;
   }
 }
