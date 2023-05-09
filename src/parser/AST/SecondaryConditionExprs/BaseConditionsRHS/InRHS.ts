@@ -1,10 +1,9 @@
 import { IN_CONDITION } from "../../../config";
 import { BaseConditionRHS } from "./BaseConditionRHS";
-class InRHS implements BaseConditionRHS {
-  type: Number;
+class InRHS extends BaseConditionRHS {
   terms: Array<string>;
   constructor(terms: Array<string>) {
-    this.type = IN_CONDITION;
+    super(IN_CONDITION);
     this.terms = terms;
   }
   evaluate(keyword: string, track: SpotifyApi.TrackObjectFull): boolean {

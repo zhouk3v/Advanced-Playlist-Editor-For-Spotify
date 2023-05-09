@@ -1,10 +1,9 @@
 import { EQUALS_CONDITION } from "../../../config";
 import { BaseConditionRHS } from "./BaseConditionRHS";
-class EqualsRHS implements BaseConditionRHS {
-  type: Number;
+class EqualsRHS extends BaseConditionRHS {
   term: string;
   constructor(term: string) {
-    this.type = EQUALS_CONDITION;
+    super(EQUALS_CONDITION);
     this.term = term;
   }
   evaluate(keyword: string, track: SpotifyApi.TrackObjectFull): boolean {

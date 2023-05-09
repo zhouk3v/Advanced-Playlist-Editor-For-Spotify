@@ -1,10 +1,9 @@
 import { REGEX_CONDITION } from "../../../config";
 import { BaseConditionRHS } from "./BaseConditionRHS";
-class LikeRHS implements BaseConditionRHS {
-  type: Number;
+class LikeRHS extends BaseConditionRHS {
   term: string;
   constructor(term: string) {
-    this.type = REGEX_CONDITION;
+    super(REGEX_CONDITION);
     this.term = term;
   }
   evaluate(keyword: string, track: SpotifyApi.TrackObjectFull): boolean {

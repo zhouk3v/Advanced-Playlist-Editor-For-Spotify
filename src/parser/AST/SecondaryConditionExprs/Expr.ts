@@ -1,3 +1,3 @@
-export interface Expr {
-  evaluate: (track: SpotifyApi.TrackObjectFull) => boolean;
+export abstract class Expr {
+  abstract evaluate(track: SpotifyApi.TrackObjectFull): boolean;
 }
