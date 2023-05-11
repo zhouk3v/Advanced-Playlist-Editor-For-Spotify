@@ -15,7 +15,7 @@ const getPlaylistId = async (playlistName) => {
 };
 
 export const createPlaylist = async (playlist) => {
-  const token = getToken();
+  const token = await getToken();
   // Get the user id through the v1/me endpoint
   const user = await getJSON("https://api.spotify.com/v1/me");
   const userId = user.id;
@@ -34,7 +34,7 @@ export const createPlaylist = async (playlist) => {
 };
 
 export const deletePlaylists = async (playlist) => {
-  const token = getToken();
+  const token = await getToken();
   const playlistId = await getPlaylistId(playlist);
   if (!playlistId) {
     return;
@@ -53,7 +53,7 @@ export const deletePlaylists = async (playlist) => {
 };
 
 export const editPlaylist = async (playlist, tracks, methodType) => {
-  const token = getToken();
+  const token = await getToken();
   const playlistId = await getPlaylistId(playlist);
   if (!playlistId) {
     return;

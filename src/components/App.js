@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import localforage from "localforage";
 
+import { CLIENT_ID, storeToken, generateRefreshToken } from "../API/api";
+
 import Login from "./Login";
 
 import Editor from "./Editor";
 
 const authEndpoint = "https://accounts.spotify.com/authorize";
-
-const clientId = "c55715b0bcae4293b92804f55b94c15c";
 
 // local testing Uri
 const redirectUri = "http://localhost:3000/";
@@ -20,17 +20,6 @@ const scopes = [
   "user-read-private",
   "user-read-email",
 ];
-
-// TODO: Move token generation code into API
-const storeToken = (json) => {
-  // Store the time that we get the access token
-  localStorage.setItem("tokenObtainTime", Date.now());
-
-  // Store the access token, refresh token and expiry time into local storage
-  localStorage.setItem("accesstoken", json.access_token);
-  localStorage.setItem("refreshtoken", json.refresh_token);
-  localStorage.setItem("expiresin", json.expires_in);
-};
 
 const logout = async () => {
   localStorage.clear();
@@ -81,6 +70,7 @@ const App = () => {
       const codeChallenge = await generateCodeChallenge(codeVerifier);
       setCodeChallenge(codeChallenge);
     };
+
     const generateNewToken = async (code) => {
       // Grab the code verifier from session storage
       const codeVerifier = sessionStorage.getItem("codeVerifier");
@@ -91,7 +81,7 @@ const App = () => {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: new URLSearchParams({
-          client_id: clientId,
+          client_id: CLIENT_ID,
           grant_type: "authorization_code",
           code,
           redirect_uri: redirectUri,
@@ -105,22 +95,9 @@ const App = () => {
       setToken(json.access_token);
     };
 
-    const generateRefreshToken = async () => {
-      const refresh_token = localStorage.getItem("refreshtoken");
-      const res = await fetch("https://accounts.spotify.com/api/token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          client_id: clientId,
-          grant_type: "refresh_token",
-          refresh_token,
-        }),
-      });
-      const json = await res.json();
-      storeToken(json);
-      setToken(json.access_token);
+    const generateRefreshTokenStartup = async () => {
+      const token = await generateRefreshToken();
+      setToken(token);
     };
 
     const tokenExists = localStorage.getItem("accesstoken");
@@ -147,7 +124,7 @@ const App = () => {
       const tokenObtainTime = parseInt(localStorage.getItem("tokenObtainTime"));
       const expires_in_sec = parseInt(localStorage.getItem("expiresin")) * 1000;
       if (Date.now() > tokenObtainTime + expires_in_sec) {
-        generateRefreshToken();
+        generateRefreshTokenStartup();
       } else {
         setToken(localStorage.getItem("accesstoken"));
       }
@@ -161,7 +138,7 @@ const App = () => {
       {validState && !token && !isRedirect && (
         <Login
           authEndpoint={authEndpoint}
-          clientId={clientId}
+          clientId={CLIENT_ID}
           redirectUri={redirectUri}
           urlState={urlState}
           codeChallenge={codeChallenge}
