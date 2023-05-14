@@ -1,7 +1,4 @@
-// export interface BaseConditionRHS {
-//   type: Number;
-//   evaluate: (keyword: string, track: SpotifyApi.TrackObjectFull) => boolean;
-// }
+import { TrackObject } from "../../../../API/fetchTracks";
 
 export abstract class BaseConditionRHS {
   type: Number;
@@ -9,8 +6,5 @@ export abstract class BaseConditionRHS {
     this.type = type;
   }
 
-  abstract evaluate(
-    keyword: string,
-    track: SpotifyApi.TrackObjectFull
-  ): boolean;
+  abstract evaluate(keyword: string, track: TrackObject): boolean;
 }

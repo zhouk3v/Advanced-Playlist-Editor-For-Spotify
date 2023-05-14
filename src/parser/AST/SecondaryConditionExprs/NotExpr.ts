@@ -1,4 +1,5 @@
 import { Expr } from "./Expr";
+import { TrackObject } from "../../../API/fetchTracks";
 
 class NotExpr extends Expr {
   expr: Expr;
@@ -6,7 +7,7 @@ class NotExpr extends Expr {
     super();
     this.expr = expr;
   }
-  evaluate(track: SpotifyApi.TrackObjectFull): boolean {
+  evaluate(track: TrackObject): boolean {
     return !this.expr.evaluate(track);
   }
 }

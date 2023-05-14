@@ -54,6 +54,7 @@ const generateCodeChallenge = async (codeVerifier) => {
 };
 
 const App = () => {
+  // TODO: refactor login code into seperate context (App.js is really bloated with login code that shouldn't be here)
   const [token, setToken] = useState(localStorage.getItem("accesstoken"));
   const [validState, setValidState] = useState(true);
   const [codeChallenge, setCodeChallenge] = useState(null);
@@ -104,16 +105,16 @@ const App = () => {
     if (!tokenExists) {
       // Get the search parameters, if any from the url
       const params = new URL(window.location).searchParams;
-      const code = params.get("code");
-      const urlState = params.get("state");
+      const codeParam = params.get("code");
+      const urlStateParam = params.get("state");
       // If we were redirected from spotify, we should get 2 search parameters: code and state
-      if (code && urlState) {
+      if (codeParam && urlStateParam) {
         // Validate the state in the redirectUri
         const savedState = sessionStorage.getItem("state");
-        setValidState(urlState === savedState);
+        setValidState(urlStateParam === savedState);
         if (validState) {
           setIsRedirect(true);
-          generateNewToken(code);
+          generateNewToken(codeParam);
         }
       } else {
         // Generate state and code challenge

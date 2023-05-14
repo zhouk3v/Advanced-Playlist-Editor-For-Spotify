@@ -1,5 +1,6 @@
 import { BaseConditionRHS } from "./BaseConditionsRHS/BaseConditionRHS";
 import { Expr } from "./Expr";
+import { TrackObject } from "../../../API/fetchTracks";
 // TODO: Determine if we should relax case-sensitivity for equals and in conditions
 class BaseCondition extends Expr {
   keyword: string;
@@ -9,7 +10,7 @@ class BaseCondition extends Expr {
     this.keyword = keyword;
     this.rhs = rhs;
   }
-  evaluate(track: SpotifyApi.TrackObjectFull): boolean {
+  evaluate(track: TrackObject): boolean {
     return this.rhs.evaluate(this.keyword, track);
   }
 }

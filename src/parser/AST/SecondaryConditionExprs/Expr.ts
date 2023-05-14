@@ -1,3 +1,5 @@
+import { TrackObject } from "../../../API/fetchTracks";
+
 export abstract class Expr {
-  abstract evaluate(track: SpotifyApi.TrackObjectFull): boolean;
+  abstract evaluate(track: TrackObject): boolean;
 }

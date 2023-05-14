@@ -1,4 +1,5 @@
 import { Expr } from "./Expr";
+import { TrackObject } from "../../../API/fetchTracks";
 
 class OrExpr extends Expr {
   expr1: Expr;
@@ -8,7 +9,7 @@ class OrExpr extends Expr {
     this.expr1 = expr1;
     this.expr2 = expr2;
   }
-  evaluate(track: SpotifyApi.TrackObjectFull) {
+  evaluate(track: TrackObject) {
     return this.expr1.evaluate(track) || this.expr2.evaluate(track);
   }
 }

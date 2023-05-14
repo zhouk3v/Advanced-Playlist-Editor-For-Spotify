@@ -1,23 +1,39 @@
 import { getJSON, getToken } from "./api";
+import { TrackObject } from "./fetchTracks";
 import { splitIntoChunks } from "./util";
 import localforage from "localforage";
 
-const getPlaylistId = async (playlistName) => {
-  const playlistUrl = new URL("https://api.spotify.com/v1/me/playlists");
-  const playlistRes = await getJSON(playlistUrl);
-  const playlistObj = playlistRes.items.find(
-    (playlist) => playlist.name === playlistName
-  );
+const getPlaylistId = async (playlistName: string): Promise<string | null> => {
+  let playlistUrl = "https://api.spotify.com/v1/me/playlists";
+  let playlistObj: SpotifyApi.PlaylistObjectSimplified | undefined = undefined;
+  let nextPlayliststURL: string | null = null;
+  do {
+    const playlistRes = await getJSON<
+      SpotifyApi.PagingObject<SpotifyApi.PlaylistObjectSimplified>
+    >(playlistUrl);
+    playlistObj = playlistRes.items.find(
+      (playlist) => playlist.name === playlistName
+    );
+    if (playlistObj) {
+      break;
+    }
+    nextPlayliststURL = playlistRes.next;
+    if (nextPlayliststURL) {
+      playlistUrl = nextPlayliststURL;
+    }
+  } while (nextPlayliststURL);
   if (!playlistObj) {
     return null;
   }
   return playlistObj.id;
 };
 
-export const createPlaylist = async (playlist) => {
+export const createPlaylist = async (playlist: string): Promise<void> => {
   const token = await getToken();
   // Get the user id through the v1/me endpoint
-  const user = await getJSON("https://api.spotify.com/v1/me");
+  const user = await getJSON<SpotifyApi.CurrentUsersProfileResponse>(
+    "https://api.spotify.com/v1/me"
+  );
   const userId = user.id;
   // Send a POST request to the user's playlist endpoint to create the playlist
   await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
@@ -33,7 +49,7 @@ export const createPlaylist = async (playlist) => {
   });
 };
 
-export const deletePlaylists = async (playlist) => {
+export const deletePlaylists = async (playlist: string) => {
   const token = await getToken();
   const playlistId = await getPlaylistId(playlist);
   if (!playlistId) {
@@ -52,13 +68,17 @@ export const deletePlaylists = async (playlist) => {
   await localforage.removeItem(`playlist-${playlist}`);
 };
 
-export const editPlaylist = async (playlist, tracks, methodType) => {
+export const editPlaylist = async (
+  playlist: string,
+  tracks: Array<TrackObject>,
+  methodType: string
+) => {
   const token = await getToken();
   const playlistId = await getPlaylistId(playlist);
   if (!playlistId) {
     return;
   }
-  const uris = [];
+  const uris: Array<string> = [];
   tracks.forEach((track) => {
     uris.push(track.uri);
   });

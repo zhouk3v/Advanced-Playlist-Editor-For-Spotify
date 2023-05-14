@@ -1,3 +1,4 @@
+import { TrackObject } from "../../../API/fetchTracks";
 import { Expr } from "../SecondaryConditionExprs/Expr";
 
 class SecondaryConditions {
@@ -6,7 +7,7 @@ class SecondaryConditions {
     this.expr = expr;
   }
 
-  evaluate(track: SpotifyApi.TrackObjectFull): boolean {
+  evaluate(track: TrackObject): boolean {
     return this.expr.evaluate(track);
   }
 }
