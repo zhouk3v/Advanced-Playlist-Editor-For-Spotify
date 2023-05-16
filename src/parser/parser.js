@@ -1,5 +1,4 @@
-// TODO: overhaul error throwing
-import { EQUALS_CONDITION, IN_CONDITION, REGEX_CONDITION } from "./config";
+// TODO: overhaul error throwing - make it so that the parser is the only one that throws errors
 import lexer from "./lexer";
 import add from "./AST/QueryTypes/Add";
 import andExpr from "./AST/SecondaryConditionExprs/AndExpr";
@@ -179,7 +178,7 @@ class Parser {
     const artist = this.term();
     return {
       name,
-      artist,
+      filter: artist,
     };
   }
 
