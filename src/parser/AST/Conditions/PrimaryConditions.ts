@@ -85,7 +85,8 @@ class PrimaryConditions {
       promises.push(getAllTracksFromPlaylist(playlist));
     });
     const tracks = await Promise.all(promises);
-    return tracks.flat();
+    // We need to filter for undefined as getTrack can resolve to undefined
+    return tracks.flat().filter((track) => track !== undefined);
   }
 }
 
