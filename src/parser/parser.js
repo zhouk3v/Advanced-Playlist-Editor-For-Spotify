@@ -4,13 +4,15 @@ import add from "./AST/QueryTypes/Add";
 import andExpr from "./AST/SecondaryConditionExprs/AndExpr";
 import baseCondition from "./AST/SecondaryConditionExprs/BaseCondition";
 import create from "./AST/QueryTypes/Create";
-import deleteplaylist from "./AST/QueryTypes/DeletePlaylist";
+import drop from "./AST/QueryTypes/Drop";
 import deletetrack from "./AST/QueryTypes/DeleteTrack";
 import get from "./AST/QueryTypes/Get";
 import notExpr from "./AST/SecondaryConditionExprs/NotExpr";
 import orExpr from "./AST/SecondaryConditionExprs/OrExpr";
 import primaryconditions from "./AST/Conditions/PrimaryConditions";
-import search from "./AST/QueryTypes/Search";
+import artistSearch from "./AST/QueryTypes/Search/ArtistSearch";
+import albumSearch from "./AST/QueryTypes/Search/AlbumSearch";
+import trackSearch from "./AST/QueryTypes/Search/TrackSearch";
 import secondaryconditions from "./AST/Conditions/SecondaryCondition";
 import equalsRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/EqualsRHS";
 import inRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/InRHS";
@@ -49,6 +51,10 @@ class Parser {
       this.lexer.consume("create");
       this.lexer.consume("playlist");
       query = this.create();
+    } else if (this.lexer.inspect("drop")) {
+      this.lexer.consume("drop");
+      this.lexer.consume("playlist");
+      query = this.drop();
     } else {
       throw new Error("Invalid query");
     }
@@ -71,13 +77,14 @@ class Parser {
   }
 
   delete() {
-    return this.deleteRHS();
+    this.lexer.consume("from");
+    const playlist = this.term();
+    const secondary = this.secondaryconditions();
+    return new deletetrack(playlist, secondary);
   }
 
   search() {
-    const keyword = this.keyword();
-    const term = this.term();
-    return new search(keyword, term);
+    return this.searchRHS();
   }
 
   create() {
@@ -85,19 +92,44 @@ class Parser {
     return new create(playlist);
   }
 
-  deleteRHS() {
-    if (this.lexer.inspect("from")) {
-      this.lexer.consume("from");
-      const playlist = this.term();
-      const secondary = this.secondaryconditions();
-      return new deletetrack(playlist, secondary);
-    } else if (this.lexer.inspect("playlist")) {
-      this.lexer.consume("playlist");
-      const playlist = this.term();
-      return new deleteplaylist(playlist);
+  drop() {
+    const playlist = this.term();
+    return new drop(playlist);
+  }
+
+  //
+  // SearchRHS
+  //
+  searchRHS() {
+    if (this.lexer.inspect("artist")) {
+      this.lexer.consume("artist");
+      return this.searchArtist();
+    } else if (this.lexer.inspect("album")) {
+      this.lexer.consume("album");
+      return this.searchAlbum();
+    } else if (this.lexer.inspect("track")) {
+      this.lexer.consume("track");
+      return this.searchTrack();
     } else {
-      throw new Error("Invalid delete statement");
+      throw new Error(
+        'Invalid Search type, expecting "artist", "album" or "track"'
+      );
     }
+  }
+
+  searchArtist() {
+    const artist = this.term();
+    return new artistSearch(artist);
+  }
+
+  searchAlbum() {
+    const album = this.term();
+    return new albumSearch(album);
+  }
+
+  searchTrack() {
+    const track = this.term();
+    return new trackSearch(track);
   }
 
   //
@@ -132,7 +164,9 @@ class Parser {
       this.lexer.consume(":");
       return this.playlistPrimary();
     } else {
-      throw new Error("Invalid primary condition");
+      throw new Error(
+        'Invalid primary condition, expecting "artist", "album", "track", or "playlist"'
+      );
     }
   }
 
@@ -156,6 +190,10 @@ class Parser {
         });
       });
       this.lexer.consume("]");
+    } else {
+      throw new Error(
+        'Invalid album primary condition, expected a term or "[" here'
+      );
     }
     return albumObjs;
   }
@@ -202,6 +240,10 @@ class Parser {
         });
       });
       this.lexer.consume("]");
+    } else {
+      throw new Error(
+        'Invalid artist primary condition, expected a term or "[" here'
+      );
     }
     return artistObjs;
   }
@@ -226,6 +268,10 @@ class Parser {
         });
       });
       this.lexer.consume("]");
+    } else {
+      throw new Error(
+        'Invalid playlist primary condition, expected a term or "[" here'
+      );
     }
     return playlistObjs;
   }
@@ -250,6 +296,10 @@ class Parser {
         });
       });
       this.lexer.consume("]");
+    } else {
+      throw new Error(
+        'Invalid track primary condition, expected a term or "[" here'
+      );
     }
     return trackObjs;
   }
@@ -291,6 +341,8 @@ class Parser {
         filterType: "album",
         filter: album,
       };
+    } else {
+      throw new Error('Invalid track term, expected "artist" or "album" here');
     }
   }
 

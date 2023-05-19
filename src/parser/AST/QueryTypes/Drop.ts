@@ -1,7 +1,7 @@
 import { deletePlaylists } from "../../../API/playlists";
 import { QueryType, PlaylistQueryResult } from "./QueryType";
 
-class DeletePlaylist extends QueryType<PlaylistQueryResult> {
+class Drop extends QueryType<PlaylistQueryResult> {
   term: string;
   constructor(term: string) {
     super("DeletePlaylist");
@@ -13,4 +13,4 @@ class DeletePlaylist extends QueryType<PlaylistQueryResult> {
   }
 }
 
-export default DeletePlaylist;
+export default Drop;

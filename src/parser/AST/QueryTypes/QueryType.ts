@@ -7,12 +7,6 @@ export interface PlaylistQueryResult {
 export interface TrackQueryResult {
   items: Array<TrackObject>;
 }
-
-export interface SearchResult<T> {
-  items: Array<T>;
-  next: string | null;
-}
-
 export abstract class QueryType<T> {
   type: string;
   constructor(type: string) {
