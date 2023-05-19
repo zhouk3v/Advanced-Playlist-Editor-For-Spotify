@@ -34,6 +34,10 @@ class Recognizer {
       this.lexer.consume("create");
       this.lexer.consume("playlist");
       this.create();
+    } else if (this.lexer.inspect("drop")) {
+      this.lexer.consume("drop");
+      this.lexer.consume("playlist");
+      this.drop();
     } else {
       throw new Error("Invalid query");
     }
@@ -53,29 +57,53 @@ class Recognizer {
   }
 
   delete() {
-    this.deleteRHS();
+    this.lexer.consume("from");
+    this.term();
+    this.secondaryconditions();
   }
 
   search() {
-    this.keyword();
-    this.term();
+    this.searchRHS();
   }
 
   create() {
     this.term();
   }
 
-  deleteRHS() {
-    if (this.lexer.inspect("from")) {
-      this.lexer.consume("from");
-      this.term();
-      this.secondaryconditions();
-    } else if (this.lexer.inspect("playlist")) {
-      this.lexer.consume("playlist");
-      this.term();
+  drop() {
+    this.term();
+  }
+
+  //
+  // SearchRHS
+  //
+  searchRHS() {
+    if (this.lexer.inspect("artist")) {
+      this.lexer.consume("artist");
+      this.searchArtist();
+    } else if (this.lexer.inspect("album")) {
+      this.lexer.consume("album");
+      this.searchAlbum();
+    } else if (this.lexer.inspect("track")) {
+      this.lexer.consume("track");
+      this.searchTrack();
     } else {
-      throw new Error("Invalid delete statement");
+      throw new Error(
+        'Invalid Search type, expecting "artist", "album" or "track"'
+      );
     }
+  }
+
+  searchArtist() {
+    this.term();
+  }
+
+  searchAlbum() {
+    this.term();
+  }
+
+  searchTrack() {
+    this.term();
   }
 
   //
@@ -108,7 +136,9 @@ class Recognizer {
       this.lexer.consume(":");
       this.playlistPrimary();
     } else {
-      throw new Error("Invalid primary condition");
+      throw new Error(
+        'Invalid primary condition, expecting "artist", "album", "track", or "playlist"'
+      );
     }
   }
 
@@ -121,6 +151,8 @@ class Recognizer {
       this.lexer.consume("[");
       this.albumTerms();
       this.lexer.consume("]");
+    } else {
+      throw new Error('Expected a term or "[" here');
     }
   }
 
@@ -149,6 +181,8 @@ class Recognizer {
       this.lexer.consume("[");
       this.terms();
       this.lexer.consume("]");
+    } else {
+      throw new Error('Expected a term or "[" here');
     }
   }
 
@@ -161,6 +195,8 @@ class Recognizer {
       this.lexer.consume("[");
       this.terms();
       this.lexer.consume("]");
+    } else {
+      throw new Error('Expected a term or "[" here');
     }
   }
 
@@ -173,6 +209,8 @@ class Recognizer {
       this.lexer.consume("[");
       this.trackTerms();
       this.lexer.consume("]");
+    } else {
+      throw new Error('Expected a term or "[" here');
     }
   }
 
@@ -199,6 +237,8 @@ class Recognizer {
       this.lexer.consume("album");
       this.lexer.consume(":");
       this.term();
+    } else {
+      throw new Error('Expected "artist" or "album" here');
     }
   }
 
@@ -275,10 +315,8 @@ class Recognizer {
       this.lexer.consume("album");
     } else if (this.lexer.inspect("track")) {
       this.lexer.consume("track");
-    } else if (this.lexer.inspect("playlist")) {
-      this.lexer.consume("playlist");
     } else {
-      throw new Error("Invalid secondary condition LHS");
+      throw new Error("Invalid secondary condition RHS");
     }
   }
 

@@ -29,8 +29,8 @@ it("handles create playlist query", () => {
   recognizer.parseInput(`create playlist "New Playlist"`);
 });
 
-it("handle delete playlist query", () => {
-  recognizer.parseInput(`delete playlist "New Playlist"`);
+it("handle drop playlist query", () => {
+  recognizer.parseInput(`drop playlist "New Playlist"`);
 });
 
 // primary conditions
