@@ -60,6 +60,9 @@ export const getJSON = async <T>(url: string): Promise<T> => {
       Authorization: `Bearer ${token}`,
     },
   });
+  if (!res.ok) {
+    throw new Error(`API Error: ${res.status} ${res.statusText}`);
+  }
   const json = await res.json();
   return json;
 };

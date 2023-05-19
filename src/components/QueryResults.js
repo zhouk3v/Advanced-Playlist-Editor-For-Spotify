@@ -11,7 +11,7 @@ const QueryResults = ({ type, results }) => {
   };
   // Render the result of a create playlist or delete playlist query
   const renderPlaylistQuery = () => {
-    return <div>{results}</div>;
+    return <div>{results.result}</div>;
   };
   // Render the result of a search query
   const renderSearchQuery = () => {
@@ -19,7 +19,7 @@ const QueryResults = ({ type, results }) => {
       <InfiniteScroll
         type="search"
         items={results.items}
-        next={results.url}
+        next={results.next}
       ></InfiniteScroll>
     );
   };

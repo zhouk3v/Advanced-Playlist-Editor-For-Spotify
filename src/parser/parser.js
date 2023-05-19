@@ -377,8 +377,6 @@ class Parser {
       return this.lexer.consume("album");
     } else if (this.lexer.inspect("track")) {
       return this.lexer.consume("track");
-    } else if (this.lexer.inspect("playlist")) {
-      return this.lexer.consume("playlist");
     } else {
       throw new Error("Invalid secondary condition LHS");
     }

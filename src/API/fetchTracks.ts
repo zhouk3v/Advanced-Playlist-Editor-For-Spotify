@@ -96,7 +96,7 @@ export const getTracksFromAlbums = async (
       type: "album",
       limit: "50",
     }).toString();
-    const searchResults = await getJSON<SpotifyApi.SearchResponse>(
+    const searchResults = await getJSON<SpotifyApi.AlbumSearchResponse>(
       searchUrl.toString()
     );
     // Search the results with the matching name and artist (it is not a guarantee that the desired album is the first result, but it should be in the first 50)
