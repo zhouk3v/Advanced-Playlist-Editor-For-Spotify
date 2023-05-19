@@ -1,18 +1,12 @@
 import { getJSON } from "../../../../API/api";
-import { QueryType } from "../QueryType";
+import { QueryResult } from "../QueryType";
+import Search from "./Search";
 
-interface TrackSearchResult {
-  items: Array<SpotifyApi.TrackObjectFull>;
-  url: string | null;
-}
-
-class TrackSearch extends QueryType<TrackSearchResult> {
-  term: string;
+class TrackSearch extends Search {
   constructor(term: string) {
-    super("trackSearch");
-    this.term = term;
+    super("TrackSearch", term);
   }
-  async execute(): Promise<TrackSearchResult> {
+  async execute(): Promise<QueryResult> {
     const searchUrl = new URL("https://api.spotify.com/v1/search");
     searchUrl.search = new URLSearchParams({
       q: this.term,
@@ -23,8 +17,8 @@ class TrackSearch extends QueryType<TrackSearchResult> {
     );
     const keywordResults = results.tracks;
     return {
-      items: keywordResults.items,
-      url: keywordResults.next,
+      trackSearchResults: keywordResults.items,
+      next: keywordResults.next,
     };
   }
 }

@@ -1,15 +1,15 @@
 import { deletePlaylists } from "../../../API/playlists";
-import { QueryType, PlaylistQueryResult } from "./QueryType";
+import { QueryType, QueryResult } from "./QueryType";
 
-class Drop extends QueryType<PlaylistQueryResult> {
+class Drop extends QueryType {
   term: string;
   constructor(term: string) {
-    super("DeletePlaylist");
+    super("Drop");
     this.term = term;
   }
-  async execute(): Promise<PlaylistQueryResult> {
+  async execute(): Promise<QueryResult> {
     await deletePlaylists(this.term);
-    return { result: `Deleted playlist ${this.term}` };
+    return { result: `Dropped playlist "${this.term}"` };
   }
 }
 

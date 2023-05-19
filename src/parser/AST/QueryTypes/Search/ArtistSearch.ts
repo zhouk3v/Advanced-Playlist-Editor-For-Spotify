@@ -1,18 +1,11 @@
 import { getJSON } from "../../../../API/api";
-import { QueryType } from "../QueryType";
-
-interface ArtistSearchResult {
-  items: Array<SpotifyApi.ArtistObjectFull>;
-  url: string | null;
-}
-
-class ArtistSearch extends QueryType<ArtistSearchResult> {
-  term: string;
+import { QueryResult } from "../QueryType";
+import Search from "./Search";
+class ArtistSearch extends Search {
   constructor(term: string) {
-    super("artistSearch");
-    this.term = term;
+    super("ArtistSearch", term);
   }
-  async execute(): Promise<ArtistSearchResult> {
+  async execute(): Promise<QueryResult> {
     const searchUrl = new URL("https://api.spotify.com/v1/search");
     searchUrl.search = new URLSearchParams({
       q: this.term,
@@ -23,8 +16,8 @@ class ArtistSearch extends QueryType<ArtistSearchResult> {
     );
     const keywordResults = results.artists;
     return {
-      items: keywordResults.items,
-      url: keywordResults.next,
+      artistSearchResults: keywordResults.items,
+      next: keywordResults.next,
     };
   }
 }

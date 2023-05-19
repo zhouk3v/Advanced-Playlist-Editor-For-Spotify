@@ -1,16 +1,18 @@
 import { TrackObject } from "../../../API/fetchTracks";
 
-export interface PlaylistQueryResult {
-  result: string;
+export interface QueryResult {
+  result?: string;
+  items?: Array<TrackObject>;
+  artistSearchResults?: Array<SpotifyApi.ArtistObjectFull>;
+  albumSearchResults?: Array<SpotifyApi.AlbumObjectSimplified>;
+  trackSearchResults?: Array<SpotifyApi.TrackObjectFull>;
+  next?: string | null;
 }
 
-export interface TrackQueryResult {
-  items: Array<TrackObject>;
-}
-export abstract class QueryType<T> {
+export abstract class QueryType {
   type: string;
   constructor(type: string) {
     this.type = type;
   }
-  abstract execute(): Promise<T>;
+  abstract execute(): Promise<QueryResult>;
 }

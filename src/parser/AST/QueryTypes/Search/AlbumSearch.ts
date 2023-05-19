@@ -1,18 +1,11 @@
 import { getJSON } from "../../../../API/api";
-import { QueryType } from "../QueryType";
-
-interface AlbumSearchResult {
-  items: Array<SpotifyApi.AlbumObjectSimplified>;
-  url: string | null;
-}
-
-class AlbumSearch extends QueryType<AlbumSearchResult> {
-  term: string;
+import { QueryResult } from "../QueryType";
+import Search from "./Search";
+class AlbumSearch extends Search {
   constructor(term: string) {
-    super("albumSearch");
-    this.term = term;
+    super("AlbumSearch", term);
   }
-  async execute(): Promise<AlbumSearchResult> {
+  async execute(): Promise<QueryResult> {
     const searchUrl = new URL("https://api.spotify.com/v1/search");
     searchUrl.search = new URLSearchParams({
       q: this.term,
@@ -23,8 +16,8 @@ class AlbumSearch extends QueryType<AlbumSearchResult> {
     );
     const keywordResults = results.albums;
     return {
-      items: keywordResults.items,
-      url: keywordResults.next,
+      albumSearchResults: keywordResults.items,
+      next: keywordResults.next,
     };
   }
 }

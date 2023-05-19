@@ -1,29 +1,41 @@
 // TODO: overhaul error throwing - make it so that the parser is the only one that throws errors
 import lexer from "./lexer";
-import add from "./AST/QueryTypes/Add";
-import andExpr from "./AST/SecondaryConditionExprs/AndExpr";
-import baseCondition from "./AST/SecondaryConditionExprs/BaseCondition";
-import create from "./AST/QueryTypes/Create";
-import drop from "./AST/QueryTypes/Drop";
-import deletetrack from "./AST/QueryTypes/DeleteTrack";
-import get from "./AST/QueryTypes/Get";
-import notExpr from "./AST/SecondaryConditionExprs/NotExpr";
-import orExpr from "./AST/SecondaryConditionExprs/OrExpr";
-import primaryconditions from "./AST/Conditions/PrimaryConditions";
-import artistSearch from "./AST/QueryTypes/Search/ArtistSearch";
-import albumSearch from "./AST/QueryTypes/Search/AlbumSearch";
-import trackSearch from "./AST/QueryTypes/Search/TrackSearch";
-import secondaryconditions from "./AST/Conditions/SecondaryCondition";
-import equalsRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/EqualsRHS";
-import inRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/InRHS";
-import likeRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/LikeRHS";
+import Add from "./AST/QueryTypes/Add";
+import AndExpr from "./AST/SecondaryConditionExprs/AndExpr";
+import BaseCondition from "./AST/SecondaryConditionExprs/BaseCondition";
+import Create from "./AST/QueryTypes/Create";
+import Drop from "./AST/QueryTypes/Drop";
+import DeleteTrack from "./AST/QueryTypes/DeleteTrack";
+import Get from "./AST/QueryTypes/Get";
+import NotExpr from "./AST/SecondaryConditionExprs/NotExpr";
+import OrExpr from "./AST/SecondaryConditionExprs/OrExpr";
+import { Expr } from "./AST/SecondaryConditionExprs/Expr";
+import PrimaryConditions, {
+  PrimaryCondition,
+} from "./AST/Conditions/PrimaryConditions";
+import ArtistSearch from "./AST/QueryTypes/Search/ArtistSearch";
+import AlbumSearch from "./AST/QueryTypes/Search/AlbumSearch";
+import TrackSearch from "./AST/QueryTypes/Search/TrackSearch";
+import SecondaryConditions from "./AST/Conditions/SecondaryCondition";
+import EqualsRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/EqualsRHS";
+import InRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/InRHS";
+import LikeRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/LikeRHS";
+import { QueryType } from "./AST/QueryTypes/QueryType";
+import Search from "./AST/QueryTypes/Search/Search";
+import { AlbumSearchObject } from "./AST/Conditions/SearchObjects/AlbumSearchObject";
+import {
+  TrackSearchObject,
+  TrackSearchRHS,
+} from "./AST/Conditions/SearchObjects/TrackSearchObject";
+import { BaseConditionRHS } from "./AST/SecondaryConditionExprs/BaseConditionsRHS/BaseConditionRHS";
 
 class Parser {
+  lexer: lexer;
   constructor() {
     this.lexer = new lexer();
   }
 
-  parseInput(input) {
+  parseInput(input: string): QueryType {
     this.lexer.tokenize(input);
     return this.query();
   }
@@ -32,8 +44,8 @@ class Parser {
   // query rules
   //
 
-  query() {
-    let query;
+  query(): QueryType {
+    let query: QueryType;
     if (this.lexer.inspect("get")) {
       this.lexer.consume("get");
       query = this.get();
@@ -62,45 +74,45 @@ class Parser {
     return query;
   }
 
-  get() {
+  get(): Get {
     const primary = this.primaryconditions();
     const secondary = this.secondaryconditions();
-    return new get(primary, secondary);
+    return new Get(primary, secondary);
   }
 
-  add() {
+  add(): Add {
     const playlist = this.term();
     this.lexer.consume("from");
     const primary = this.primaryconditions();
     const secondary = this.secondaryconditions();
-    return new add(playlist, primary, secondary);
+    return new Add(playlist, primary, secondary);
   }
 
-  delete() {
+  delete(): DeleteTrack {
     this.lexer.consume("from");
     const playlist = this.term();
     const secondary = this.secondaryconditions();
-    return new deletetrack(playlist, secondary);
+    return new DeleteTrack(playlist, secondary);
   }
 
-  search() {
+  search(): Search {
     return this.searchRHS();
   }
 
-  create() {
+  create(): Create {
     const playlist = this.term();
-    return new create(playlist);
+    return new Create(playlist);
   }
 
-  drop() {
+  drop(): Drop {
     const playlist = this.term();
-    return new drop(playlist);
+    return new Drop(playlist);
   }
 
   //
   // SearchRHS
   //
-  searchRHS() {
+  searchRHS(): Search {
     if (this.lexer.inspect("artist")) {
       this.lexer.consume("artist");
       return this.searchArtist();
@@ -117,27 +129,27 @@ class Parser {
     }
   }
 
-  searchArtist() {
+  searchArtist(): ArtistSearch {
     const artist = this.term();
-    return new artistSearch(artist);
+    return new ArtistSearch(artist);
   }
 
-  searchAlbum() {
+  searchAlbum(): AlbumSearch {
     const album = this.term();
-    return new albumSearch(album);
+    return new AlbumSearch(album);
   }
 
-  searchTrack() {
+  searchTrack(): TrackSearch {
     const track = this.term();
-    return new trackSearch(track);
+    return new TrackSearch(track);
   }
 
   //
   // Primary condition rules
   //
 
-  primaryconditions() {
-    const primary = new primaryconditions();
+  primaryconditions(): PrimaryConditions {
+    const primary = new PrimaryConditions();
     primary.addConditions(this.primarycondition());
     while (this.lexer.inspect("union")) {
       this.lexer.consume("union");
@@ -146,7 +158,7 @@ class Parser {
     return primary;
   }
 
-  primarycondition() {
+  primarycondition(): Array<PrimaryCondition> {
     if (this.lexer.inspect("artist")) {
       this.lexer.consume("artist");
       this.lexer.consume(":");
@@ -172,7 +184,7 @@ class Parser {
 
   // primary condition - album rules
 
-  albumPrimary() {
+  albumPrimary(): Array<PrimaryCondition> {
     const albumObjs = [];
     if (this.lexer.inspectTerm()) {
       const album = this.albumTerm();
@@ -198,7 +210,7 @@ class Parser {
     return albumObjs;
   }
 
-  albumTerms() {
+  albumTerms(): Array<AlbumSearchObject> {
     const terms = [];
     terms.push(this.albumTerm());
     while (this.lexer.inspect(",")) {
@@ -208,7 +220,7 @@ class Parser {
     return terms;
   }
 
-  albumTerm() {
+  albumTerm(): AlbumSearchObject {
     const name = this.term();
     this.lexer.consume("-");
     this.lexer.consume("artist");
@@ -216,13 +228,13 @@ class Parser {
     const artist = this.term();
     return {
       name,
-      filter: artist,
+      artist,
     };
   }
 
   // primary condition - artist rules
 
-  artistPrimary() {
+  artistPrimary(): Array<PrimaryCondition> {
     const artistObjs = [];
     if (this.lexer.inspectTerm()) {
       const artist = this.term();
@@ -250,7 +262,7 @@ class Parser {
 
   // primary condition - playlist rules
 
-  playlistPrimary() {
+  playlistPrimary(): Array<PrimaryCondition> {
     const playlistObjs = [];
     if (this.lexer.inspectTerm()) {
       const playlist = this.term();
@@ -278,7 +290,7 @@ class Parser {
 
   // primary conditon - track rules
 
-  trackPrimary() {
+  trackPrimary(): Array<PrimaryCondition> {
     const trackObjs = [];
     if (this.lexer.inspectTerm()) {
       const track = this.trackTerm();
@@ -304,7 +316,7 @@ class Parser {
     return trackObjs;
   }
 
-  trackTerms() {
+  trackTerms(): Array<TrackSearchObject> {
     const terms = [];
     terms.push(this.trackTerm());
     while (this.lexer.inspect(",")) {
@@ -314,7 +326,7 @@ class Parser {
     return terms;
   }
 
-  trackTerm() {
+  trackTerm(): TrackSearchObject {
     const name = this.term();
     this.lexer.consume("-");
     const trackProps = this.trackTermRHS();
@@ -324,7 +336,7 @@ class Parser {
     };
   }
 
-  trackTermRHS() {
+  trackTermRHS(): TrackSearchRHS {
     if (this.lexer.inspect("artist")) {
       this.lexer.consume("artist");
       this.lexer.consume(":");
@@ -350,11 +362,11 @@ class Parser {
   // secondary condition rules
   //
 
-  secondaryconditions() {
+  secondaryconditions(): SecondaryConditions | null {
     if (this.lexer.inspect("where")) {
       this.lexer.consume("where");
       const expr = this.orTerm();
-      return new secondaryconditions(expr);
+      return new SecondaryConditions(expr);
     } else {
       return null;
     }
@@ -362,28 +374,28 @@ class Parser {
 
   // Secondary conditions - boolean operators
 
-  orTerm() {
+  orTerm(): Expr {
     let expr = this.andTerm();
     if (this.lexer.inspect("or")) {
       this.lexer.consume("or");
-      expr = new orExpr(expr, this.orTerm());
+      expr = new OrExpr(expr, this.orTerm());
     }
     return expr;
   }
 
-  andTerm() {
+  andTerm(): Expr {
     let expr = this.notTerm();
     if (this.lexer.inspect("and")) {
       this.lexer.consume("and");
-      expr = new andExpr(expr, this.andTerm());
+      expr = new AndExpr(expr, this.andTerm());
     }
     return expr;
   }
 
-  notTerm() {
+  notTerm(): Expr {
     if (this.lexer.inspect("not")) {
       this.lexer.consume("not");
-      return new notExpr(this.notTerm());
+      return new NotExpr(this.notTerm());
     } else if (this.lexer.inspect("(")) {
       this.lexer.consume("(");
       const expr = this.orTerm();
@@ -396,33 +408,33 @@ class Parser {
 
   // Secondary condition - base conditions
 
-  condition() {
+  condition(): BaseCondition {
     const keyword = this.keyword();
     const rhs = this.conditionRHS();
-    return new baseCondition(keyword, rhs);
+    return new BaseCondition(keyword, rhs);
   }
 
-  conditionRHS() {
+  conditionRHS(): BaseConditionRHS {
     if (this.lexer.inspect("=")) {
       this.lexer.consume("=");
       const term = this.term();
-      return new equalsRHS(term);
+      return new EqualsRHS(term);
     } else if (this.lexer.inspect("in")) {
       this.lexer.consume("in");
       this.lexer.consume("(");
       const terms = this.terms();
       this.lexer.consume(")");
-      return new inRHS(terms);
+      return new InRHS(terms);
     } else if (this.lexer.inspect("like")) {
       this.lexer.consume("like");
       const term = this.term();
-      return new likeRHS(term);
+      return new LikeRHS(term);
     } else {
       throw new Error("Invalid condition RHS");
     }
   }
 
-  keyword() {
+  keyword(): string {
     if (this.lexer.inspect("artist")) {
       return this.lexer.consume("artist");
     } else if (this.lexer.inspect("album")) {
@@ -434,7 +446,7 @@ class Parser {
     }
   }
 
-  terms() {
+  terms(): Array<string> {
     const termsArr = [];
     termsArr.push(this.term());
     while (this.lexer.inspect(",")) {
@@ -444,7 +456,7 @@ class Parser {
     return termsArr;
   }
 
-  term() {
+  term(): string {
     if (this.lexer.inspectTerm()) {
       return this.lexer.consumeTerm();
     } else {

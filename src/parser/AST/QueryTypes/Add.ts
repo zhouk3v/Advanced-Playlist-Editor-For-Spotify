@@ -1,31 +1,31 @@
 import { editPlaylist } from "../../../API/playlists";
 import { getAllTracksFromPlaylist } from "../../../API/fetchTracks";
 import { ADD } from "../../config";
-import { QueryType, TrackQueryResult } from "./QueryType";
+import { QueryType, QueryResult } from "./QueryType";
 import PrimaryConditions from "../Conditions/PrimaryConditions";
 import SecondaryConditions from "../Conditions/SecondaryCondition";
 
-class Add extends QueryType<TrackQueryResult> {
+class Add extends QueryType {
   playlist: string;
   primary: PrimaryConditions;
-  secondary: SecondaryConditions;
+  secondary: SecondaryConditions | null;
   constructor(
     playlist: string,
     primary: PrimaryConditions,
-    secondary: SecondaryConditions
+    secondary: SecondaryConditions | null
   ) {
     super("Add");
     this.playlist = playlist;
     this.primary = primary;
     this.secondary = secondary;
   }
-  async execute(): Promise<TrackQueryResult> {
+  async execute(): Promise<QueryResult> {
     const unfilteredTracks = await this.primary.getTracks();
-    if (!this.secondary) {
+    if (this.secondary === null) {
       await editPlaylist(this.playlist, unfilteredTracks, ADD);
     } else {
       const filteredTracks = unfilteredTracks.filter((track) =>
-        this.secondary.evaluate(track)
+        this.secondary?.evaluate(track)
       );
       await editPlaylist(this.playlist, filteredTracks, ADD);
     }

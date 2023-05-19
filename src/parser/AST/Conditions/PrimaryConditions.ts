@@ -8,7 +8,7 @@ import {
 import { AlbumSearchObject } from "./SearchObjects/AlbumSearchObject";
 import { TrackSearchObject } from "./SearchObjects/TrackSearchObject";
 
-interface PrimaryCondition {
+export interface PrimaryCondition {
   type: string;
   name: string;
   filter?: string;

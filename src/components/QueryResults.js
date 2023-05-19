@@ -30,9 +30,11 @@ const QueryResults = ({ type, results }) => {
     case "DeleteTrack":
       return renderTracksQuery();
     case "Create":
-    case "DeletePlaylist":
+    case "Drop":
       return renderPlaylistQuery();
-    case "Search":
+    case "ArtistSearch":
+    case "AlbumSearch":
+    case "TrackSearch":
       return renderSearchQuery();
     default:
       return <div className="default">Waiting for a query</div>;
