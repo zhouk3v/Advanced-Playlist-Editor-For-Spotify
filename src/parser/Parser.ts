@@ -434,6 +434,7 @@ class Parser {
     }
   }
 
+  // TODO: create type for keywords
   keyword(): string {
     if (this.lexer.inspect("artist")) {
       return this.lexer.consume("artist");

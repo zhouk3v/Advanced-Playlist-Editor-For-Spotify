@@ -8,7 +8,7 @@ class Recognizer {
     this.lexer = new Lexer();
   }
 
-  parseInput(input: string) {
+  parseInput(input: string): void {
     this.lexer.tokenize(input);
     this.query();
   }
@@ -45,40 +45,40 @@ class Recognizer {
     this.lexer.consumeEOF();
   }
 
-  get() {
+  get(): void {
     this.primaryconditions();
     this.secondaryconditions();
   }
 
-  add() {
+  add(): void {
     this.term();
     this.lexer.consume("from");
     this.primaryconditions();
     this.secondaryconditions();
   }
 
-  delete() {
+  delete(): void {
     this.lexer.consume("from");
     this.term();
     this.secondaryconditions();
   }
 
-  search() {
+  search(): void {
     this.searchRHS();
   }
 
-  create() {
+  create(): void {
     this.term();
   }
 
-  drop() {
+  drop(): void {
     this.term();
   }
 
   //
   // SearchRHS
   //
-  searchRHS() {
+  searchRHS(): void {
     if (this.lexer.inspect("artist")) {
       this.lexer.consume("artist");
       this.searchArtist();
@@ -95,15 +95,15 @@ class Recognizer {
     }
   }
 
-  searchArtist() {
+  searchArtist(): void {
     this.term();
   }
 
-  searchAlbum() {
+  searchAlbum(): void {
     this.term();
   }
 
-  searchTrack() {
+  searchTrack(): void {
     this.term();
   }
 
@@ -111,7 +111,7 @@ class Recognizer {
   // Primary condition rules
   //
 
-  primaryconditions() {
+  primaryconditions(): void {
     this.primarycondition();
     while (this.lexer.inspect("union")) {
       this.lexer.consume("union");
@@ -119,7 +119,7 @@ class Recognizer {
     }
   }
 
-  primarycondition() {
+  primarycondition(): void {
     if (this.lexer.inspect("artist")) {
       this.lexer.consume("artist");
       this.lexer.consume(":");
@@ -145,7 +145,7 @@ class Recognizer {
 
   // primary condition - album rules
 
-  albumPrimary() {
+  albumPrimary(): void {
     if (this.lexer.inspectTerm()) {
       this.albumTerm();
     } else if (this.lexer.inspect("[")) {
@@ -157,7 +157,7 @@ class Recognizer {
     }
   }
 
-  albumTerms() {
+  albumTerms(): void {
     this.albumTerm();
     while (this.lexer.inspect(",")) {
       this.lexer.consume(",");
@@ -165,7 +165,7 @@ class Recognizer {
     }
   }
 
-  albumTerm() {
+  albumTerm(): void {
     this.term();
     this.lexer.consume("-");
     this.lexer.consume("artist");
@@ -175,7 +175,7 @@ class Recognizer {
 
   // primary condition - artist rules
 
-  artistPrimary() {
+  artistPrimary(): void {
     if (this.lexer.inspectTerm()) {
       this.term();
     } else if (this.lexer.inspect("[")) {
@@ -189,7 +189,7 @@ class Recognizer {
 
   // primary condition - playlist rules
 
-  playlistPrimary() {
+  playlistPrimary(): void {
     if (this.lexer.inspectTerm()) {
       this.term();
     } else if (this.lexer.inspect("[")) {
@@ -203,7 +203,7 @@ class Recognizer {
 
   // primary conditon - track rules
 
-  trackPrimary() {
+  trackPrimary(): void {
     if (this.lexer.inspectTerm()) {
       this.trackTerm();
     } else if (this.lexer.inspect("[")) {
@@ -215,7 +215,7 @@ class Recognizer {
     }
   }
 
-  trackTerms() {
+  trackTerms(): void {
     this.trackTerm();
     while (this.lexer.inspect(",")) {
       this.lexer.consume(",");
@@ -223,13 +223,13 @@ class Recognizer {
     }
   }
 
-  trackTerm() {
+  trackTerm(): void {
     this.term();
     this.lexer.consume("-");
     this.trackTermRHS();
   }
 
-  trackTermRHS() {
+  trackTermRHS(): void {
     if (this.lexer.inspect("artist")) {
       this.lexer.consume("artist");
       this.lexer.consume(":");
@@ -247,7 +247,7 @@ class Recognizer {
   // secondary condition rules
   //
 
-  secondaryconditions() {
+  secondaryconditions(): void {
     if (this.lexer.inspect("where")) {
       this.lexer.consume("where");
       this.orTerm();
@@ -256,7 +256,7 @@ class Recognizer {
 
   // Secondary conditions - boolean operators
 
-  orTerm() {
+  orTerm(): void {
     this.andTerm();
     if (this.lexer.inspect("or")) {
       this.lexer.consume("or");
@@ -264,7 +264,7 @@ class Recognizer {
     }
   }
 
-  andTerm() {
+  andTerm(): void {
     this.notTerm();
     if (this.lexer.inspect("and")) {
       this.lexer.consume("and");
@@ -272,7 +272,7 @@ class Recognizer {
     }
   }
 
-  notTerm() {
+  notTerm(): void {
     if (this.lexer.inspect("not")) {
       this.lexer.consume("not");
       this.notTerm();
@@ -287,12 +287,12 @@ class Recognizer {
 
   // Secondary condition - base conditions
 
-  condition() {
+  condition(): void {
     this.keyword();
     this.conditionRHS();
   }
 
-  conditionRHS() {
+  conditionRHS(): void {
     if (this.lexer.inspect("=")) {
       this.lexer.consume("=");
       this.term();
@@ -309,7 +309,7 @@ class Recognizer {
     }
   }
 
-  keyword() {
+  keyword(): void {
     if (this.lexer.inspect("artist")) {
       this.lexer.consume("artist");
     } else if (this.lexer.inspect("album")) {
@@ -321,7 +321,7 @@ class Recognizer {
     }
   }
 
-  terms() {
+  terms(): void {
     this.term();
     while (this.lexer.inspect(",")) {
       this.lexer.consume(",");
@@ -329,7 +329,7 @@ class Recognizer {
     }
   }
 
-  term() {
+  term(): void {
     if (this.lexer.inspectTerm()) {
       this.lexer.consumeTerm();
     } else {
