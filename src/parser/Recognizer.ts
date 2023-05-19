@@ -1,13 +1,14 @@
 // TODO: overhaul error throwing
 // TODO: cleanup primary condition and keyword rules
-import lexer from "./lexer";
+import Lexer from "./Lexer";
 
 class Recognizer {
+  lexer: Lexer;
   constructor() {
-    this.lexer = new lexer();
+    this.lexer = new Lexer();
   }
 
-  parseInput(input) {
+  parseInput(input: string) {
     this.lexer.tokenize(input);
     this.query();
   }
@@ -16,7 +17,7 @@ class Recognizer {
   // query rules
   //
 
-  query() {
+  query(): void {
     if (this.lexer.inspect("get")) {
       this.lexer.consume("get");
       this.get();

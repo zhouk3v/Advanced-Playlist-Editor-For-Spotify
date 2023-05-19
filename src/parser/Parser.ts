@@ -1,5 +1,5 @@
 // TODO: overhaul error throwing - make it so that the parser is the only one that throws errors
-import lexer from "./lexer";
+import Lexer from "./Lexer";
 import Add from "./AST/QueryTypes/Add";
 import AndExpr from "./AST/SecondaryConditionExprs/AndExpr";
 import BaseCondition from "./AST/SecondaryConditionExprs/BaseCondition";
@@ -30,9 +30,9 @@ import {
 import { BaseConditionRHS } from "./AST/SecondaryConditionExprs/BaseConditionsRHS/BaseConditionRHS";
 
 class Parser {
-  lexer: lexer;
+  lexer: Lexer;
   constructor() {
-    this.lexer = new lexer();
+    this.lexer = new Lexer();
   }
 
   parseInput(input: string): QueryType {
