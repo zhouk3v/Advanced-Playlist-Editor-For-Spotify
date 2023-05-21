@@ -1,6 +1,6 @@
 // TODO: overhaul error throwing
 // TODO: cleanup primary condition and keyword rules
-import Lexer from "./Lexer";
+import Lexer from "./lexer";
 
 class Recognizer {
   lexer: Lexer;
