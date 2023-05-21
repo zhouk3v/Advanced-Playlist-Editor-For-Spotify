@@ -1,5 +1,5 @@
 // TODO: overhaul error throwing - make it so that the parser is the only one that throws errors
-import Lexer from "./lexer";
+import Lexer from "./Lexer";
 import Add from "./AST/QueryTypes/Add";
 import AndExpr from "./AST/SecondaryConditionExprs/AndExpr";
 import BaseCondition from "./AST/SecondaryConditionExprs/BaseCondition";
