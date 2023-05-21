@@ -1,6 +1,6 @@
-import { REGEX_CONDITION } from "../../../config";
+import { REGEX_CONDITION } from "../../../../../config";
 import { BaseConditionRHS } from "./BaseConditionRHS";
-import { TrackObject } from "../../../../API/fetchTracks";
+import { TrackObject } from "../../../../../../API/fetchTracks";
 class LikeRHS extends BaseConditionRHS {
   term: string;
   constructor(term: string) {

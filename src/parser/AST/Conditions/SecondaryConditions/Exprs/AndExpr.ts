@@ -1,5 +1,5 @@
 import { Expr } from "./Expr";
-import { TrackObject } from "../../../API/fetchTracks";
+import { TrackObject } from "../../../../../API/fetchTracks";
 
 class AndExpr extends Expr {
   expr1: Expr;

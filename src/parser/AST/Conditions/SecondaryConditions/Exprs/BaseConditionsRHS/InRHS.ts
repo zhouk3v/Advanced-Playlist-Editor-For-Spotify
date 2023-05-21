@@ -1,6 +1,6 @@
-import { IN_CONDITION } from "../../../config";
+import { IN_CONDITION } from "../../../../../config";
 import { BaseConditionRHS } from "./BaseConditionRHS";
-import { TrackObject } from "../../../../API/fetchTracks";
+import { TrackObject } from "../../../../../../API/fetchTracks";
 class InRHS extends BaseConditionRHS {
   terms: Array<string>;
   constructor(terms: Array<string>) {

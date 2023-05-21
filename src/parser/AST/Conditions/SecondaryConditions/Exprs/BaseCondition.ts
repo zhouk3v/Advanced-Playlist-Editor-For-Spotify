@@ -1,6 +1,6 @@
 import { BaseConditionRHS } from "./BaseConditionsRHS/BaseConditionRHS";
 import { Expr } from "./Expr";
-import { TrackObject } from "../../../API/fetchTracks";
+import { TrackObject } from "../../../../../API/fetchTracks";
 // TODO: Determine if we should relax case-sensitivity for equals and in conditions
 class BaseCondition extends Expr {
   keyword: string;

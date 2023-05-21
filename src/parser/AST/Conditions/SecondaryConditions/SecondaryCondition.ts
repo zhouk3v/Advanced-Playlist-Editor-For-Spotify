@@ -1,5 +1,5 @@
-import { TrackObject } from "../../../API/fetchTracks";
-import { Expr } from "../SecondaryConditionExprs/Expr";
+import { TrackObject } from "../../../../API/fetchTracks";
+import { Expr } from "./Exprs/Expr";
 
 class SecondaryConditions {
   expr: Expr;

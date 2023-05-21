@@ -1,25 +1,25 @@
 // TODO: overhaul error throwing - make it so that the parser is the only one that throws errors
 import Lexer from "./Lexer";
 import Add from "./AST/QueryTypes/Add";
-import AndExpr from "./AST/SecondaryConditionExprs/AndExpr";
-import BaseCondition from "./AST/SecondaryConditionExprs/BaseCondition";
+import AndExpr from "./AST/Conditions/SecondaryConditions/Exprs/AndExpr";
+import BaseCondition from "./AST/Conditions/SecondaryConditions/Exprs/BaseCondition";
 import Create from "./AST/QueryTypes/Create";
 import Drop from "./AST/QueryTypes/Drop";
 import DeleteTrack from "./AST/QueryTypes/DeleteTrack";
 import Get from "./AST/QueryTypes/Get";
-import NotExpr from "./AST/SecondaryConditionExprs/NotExpr";
-import OrExpr from "./AST/SecondaryConditionExprs/OrExpr";
-import { Expr } from "./AST/SecondaryConditionExprs/Expr";
+import NotExpr from "./AST/Conditions/SecondaryConditions/Exprs/NotExpr";
+import OrExpr from "./AST/Conditions/SecondaryConditions/Exprs/OrExpr";
+import { Expr } from "./AST/Conditions/SecondaryConditions/Exprs/Expr";
 import PrimaryConditions, {
   PrimaryCondition,
-} from "./AST/Conditions/PrimaryConditions";
+} from "./AST/Conditions/PrimaryConditions/PrimaryConditions";
 import ArtistSearch from "./AST/QueryTypes/Search/ArtistSearch";
 import AlbumSearch from "./AST/QueryTypes/Search/AlbumSearch";
 import TrackSearch from "./AST/QueryTypes/Search/TrackSearch";
-import SecondaryConditions from "./AST/Conditions/SecondaryCondition";
-import EqualsRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/EqualsRHS";
-import InRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/InRHS";
-import LikeRHS from "./AST/SecondaryConditionExprs/BaseConditionsRHS/LikeRHS";
+import SecondaryConditions from "./AST/Conditions/SecondaryConditions/SecondaryCondition";
+import EqualsRHS from "./AST/Conditions/SecondaryConditions/Exprs/BaseConditionsRHS/EqualsRHS";
+import InRHS from "./AST/Conditions/SecondaryConditions/Exprs/BaseConditionsRHS/InRHS";
+import LikeRHS from "./AST/Conditions/SecondaryConditions/Exprs/BaseConditionsRHS/LikeRHS";
 import { QueryType } from "./AST/QueryTypes/QueryType";
 import Search from "./AST/QueryTypes/Search/Search";
 import { AlbumSearchObject } from "./AST/Conditions/SearchObjects/AlbumSearchObject";
@@ -27,7 +27,7 @@ import {
   TrackSearchObject,
   TrackSearchRHS,
 } from "./AST/Conditions/SearchObjects/TrackSearchObject";
-import { BaseConditionRHS } from "./AST/SecondaryConditionExprs/BaseConditionsRHS/BaseConditionRHS";
+import { BaseConditionRHS } from "./AST/Conditions/SecondaryConditions/Exprs/BaseConditionsRHS/BaseConditionRHS";
 
 class Parser {
   lexer: Lexer;

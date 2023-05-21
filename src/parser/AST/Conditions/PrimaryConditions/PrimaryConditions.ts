@@ -4,9 +4,9 @@ import {
   getAllTracksFromPlaylist,
   getTrack,
   TrackObject,
-} from "../../../API/fetchTracks";
-import { AlbumSearchObject } from "./SearchObjects/AlbumSearchObject";
-import { TrackSearchObject } from "./SearchObjects/TrackSearchObject";
+} from "../../../../API/fetchTracks";
+import { AlbumSearchObject } from "../SearchObjects/AlbumSearchObject";
+import { TrackSearchObject } from "../SearchObjects/TrackSearchObject";
 
 export interface PrimaryCondition {
   type: string;

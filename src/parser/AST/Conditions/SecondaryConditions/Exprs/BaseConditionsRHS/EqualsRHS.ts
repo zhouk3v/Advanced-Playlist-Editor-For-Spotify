@@ -1,6 +1,6 @@
-import { EQUALS_CONDITION } from "../../../config";
+import { EQUALS_CONDITION } from "../../../../../config";
 import { BaseConditionRHS } from "./BaseConditionRHS";
-import { TrackObject } from "../../../../API/fetchTracks";
+import { TrackObject } from "../../../../../../API/fetchTracks";
 class EqualsRHS extends BaseConditionRHS {
   term: string;
   constructor(term: string) {

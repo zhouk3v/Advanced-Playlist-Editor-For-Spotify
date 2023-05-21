@@ -1,4 +1,4 @@
-import { TrackObject } from "../../../../API/fetchTracks";
+import { TrackObject } from "../../../../../../API/fetchTracks";
 
 export abstract class BaseConditionRHS {
   type: Number;
