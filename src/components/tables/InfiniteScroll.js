@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { getJSON } from "../../API/api";
 import "./css/InfiniteScroll.css";
-import { TrackItem } from "./tableRows/TrackRow";
 
 const InfiniteScroll = ({ type, items, next }) => {
   const [listItems, setListItems] = useState(items);
@@ -49,21 +48,11 @@ const InfiniteScroll = ({ type, items, next }) => {
         </thead>
         <tbody>
           {listItems.map((listItem, index) => {
-            if (type === "tracks") {
-              return (
-                <TrackItem
-                  key={`${listItem.uri} - ${index}`}
-                  index={index + 1}
-                  track={listItem}
-                />
-              );
-            } else {
-              return (
-                <tr key={listItem.id}>
-                  <td>{listItem.name}</td>
-                </tr>
-              );
-            }
+            return (
+              <tr key={listItem.id}>
+                <td>{listItem.name}</td>
+              </tr>
+            );
           })}
         </tbody>
       </table>

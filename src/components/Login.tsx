@@ -1,13 +1,24 @@
+import React from "react";
 import "./css/Login.css";
 
-const Login = ({
-  authEndpoint,
-  clientId,
-  redirectUri,
-  urlState,
-  codeChallenge,
-  scopes,
-}) => {
+interface LoginProps {
+  authEndpoint: string;
+  clientId: string;
+  redirectUri: string;
+  urlState: string;
+  codeChallenge: string;
+  scopes: Array<string>;
+}
+
+const Login = (props: LoginProps): JSX.Element => {
+  const {
+    authEndpoint,
+    clientId,
+    redirectUri,
+    urlState,
+    codeChallenge,
+    scopes,
+  } = props;
   return (
     <div className="login">
       <a
