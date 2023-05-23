@@ -31,6 +31,7 @@ import { BaseConditionRHS } from "./AST/Conditions/SecondaryConditions/Exprs/Bas
 
 class Parser {
   lexer: Lexer;
+
   constructor() {
     this.lexer = new Lexer();
   }

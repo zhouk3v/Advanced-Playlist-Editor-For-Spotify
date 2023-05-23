@@ -3,10 +3,12 @@ import { BaseConditionRHS } from "./BaseConditionRHS";
 import { TrackObject } from "../../../../../../API/fetchTracks";
 class InRHS extends BaseConditionRHS {
   terms: Array<string>;
+
   constructor(terms: Array<string>) {
     super(IN_CONDITION);
     this.terms = terms;
   }
+  
   evaluate(keyword: string, track: TrackObject): boolean {
     const termSet = new Set(this.terms);
     switch (keyword) {

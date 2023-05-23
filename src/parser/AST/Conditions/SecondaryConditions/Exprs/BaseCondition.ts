@@ -5,11 +5,13 @@ import { TrackObject } from "../../../../../API/fetchTracks";
 class BaseCondition extends Expr {
   keyword: string;
   rhs: BaseConditionRHS;
+
   constructor(keyword: string, rhs: BaseConditionRHS) {
     super();
     this.keyword = keyword;
     this.rhs = rhs;
   }
+  
   evaluate(track: TrackObject): boolean {
     return this.rhs.evaluate(this.keyword, track);
   }

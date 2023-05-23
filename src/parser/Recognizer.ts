@@ -4,6 +4,7 @@ import Lexer from "./Lexer";
 
 class Recognizer {
   lexer: Lexer;
+
   constructor() {
     this.lexer = new Lexer();
   }

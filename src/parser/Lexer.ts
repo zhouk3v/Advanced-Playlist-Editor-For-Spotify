@@ -4,6 +4,7 @@ class lexer {
   assignChars: Set<string>;
   tokens: Array<string>;
   index: number;
+
   constructor() {
     this.setChars = new Set(["(", ")", ",", "[", "]"]);
     this.assignChars = new Set([":", "=", "-"]);

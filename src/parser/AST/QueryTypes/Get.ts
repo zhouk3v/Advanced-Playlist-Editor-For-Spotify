@@ -5,6 +5,7 @@ import { QueryType, QueryResult } from "./QueryType";
 class Get extends QueryType {
   primary: PrimaryConditions;
   secondary: SecondaryConditions | null;
+
   constructor(
     primary: PrimaryConditions,
     secondary: SecondaryConditions | null
@@ -13,6 +14,7 @@ class Get extends QueryType {
     this.primary = primary;
     this.secondary = secondary;
   }
+  
   async execute(): Promise<QueryResult> {
     const unfilteredTracks = await this.primary.getTracks();
     if (this.secondary === null) {

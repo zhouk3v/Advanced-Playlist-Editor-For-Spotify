@@ -9,6 +9,7 @@ class Add extends QueryType {
   playlist: string;
   primary: PrimaryConditions;
   secondary: SecondaryConditions | null;
+
   constructor(
     playlist: string,
     primary: PrimaryConditions,
@@ -19,6 +20,7 @@ class Add extends QueryType {
     this.primary = primary;
     this.secondary = secondary;
   }
+
   async execute(): Promise<QueryResult> {
     const unfilteredTracks = await this.primary.getTracks();
     if (this.secondary === null) {

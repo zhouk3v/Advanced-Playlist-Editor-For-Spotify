@@ -3,10 +3,12 @@ import { BaseConditionRHS } from "./BaseConditionRHS";
 import { TrackObject } from "../../../../../../API/fetchTracks";
 class LikeRHS extends BaseConditionRHS {
   term: string;
+  
   constructor(term: string) {
     super(REGEX_CONDITION);
     this.term = term;
   }
+  
   evaluate(keyword: string, track: TrackObject): boolean {
     const regex = new RegExp(this.term);
     switch (keyword) {

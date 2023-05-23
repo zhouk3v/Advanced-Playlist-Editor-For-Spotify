@@ -13,10 +13,7 @@ const QueryResults = (props: QueryResultsProps): JSX.Element => {
   const { type, results } = props;
   // Render the result of a get, add or deletetrack query
   const renderTracksQuery = (): JSX.Element => {
-    if (results.items === undefined) {
-      throw new Error("results.items is undefined");
-    }
-    return <TrackTable items={results.items}></TrackTable>;
+    return <TrackTable items={results.items!}></TrackTable>;
   };
   // Render the result of a create playlist or delete playlist query
   const renderPlaylistQuery = (): JSX.Element => {

@@ -50,60 +50,6 @@ interface TrackTableProps {
 
 const TrackTable = (props: TrackTableProps) => {
   const { items } = props;
-  // const columns = useMemo<ColumnDef<TrackObject>[]>(
-  //   () => [
-  //     {
-  //       id: "index",
-  //       accessorFn: (_, index) => {
-  //         return index + 1;
-  //       },
-  //       header: "",
-  //     },
-  //     {
-  //       id: "img",
-  //       accessorFn: (track) => track.album.images.at(-1)?.url,
-  //       cell: (props) => {
-  //         return <img src={props.getValue()} alt="" width={40} height={40} />;
-  //       },
-  //       header: "",
-  //     },
-  //     {
-  //       id: "name",
-  //       accessorFn: (track) => {
-  //         return {
-  //           name: track.name,
-  //           url: track.external_urls.spotify,
-  //         };
-  //       },
-  //       header: "Track Name",
-  //       cell: (props) => (
-  //         <a href={props.getValue().url} target="_blank" rel="noreferrer">
-  //           {props.getValue().name}
-  //         </a>
-  //       ),
-  //     },
-  //     {
-  //       id: "album",
-  //       accessorFn: (track: TrackObject) => track.album,
-  //       header: "Album",
-  //       cell: (props) => (
-  //         <a
-  //           href={props.getValue().external_urls.spotify}
-  //           target="_blank"
-  //           rel="noreferrer"
-  //         >
-  //           {props.getValue().name}
-  //         </a>
-  //       ),
-  //     },
-  //     {
-  //       accessorKey: "artists",
-  //       header: "Artists",
-  //       cell: (props) => <ArtistLinks artists={props.getValue()} />,
-  //     },
-  //   ],
-  //   []
-  // );
 
   const columnHelper = createColumnHelper<TrackObject>();
 

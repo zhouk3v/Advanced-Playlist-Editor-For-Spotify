@@ -11,8 +11,10 @@ export interface QueryResult {
 
 export abstract class QueryType {
   type: string;
+
   constructor(type: string) {
     this.type = type;
   }
+
   abstract execute(): Promise<QueryResult>;
 }

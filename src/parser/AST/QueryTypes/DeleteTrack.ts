@@ -7,11 +7,13 @@ import { QueryType, QueryResult } from "./QueryType";
 class DeleteTrack extends QueryType {
   playlist: string;
   secondary: SecondaryConditions | null;
+
   constructor(playlist: string, secondary: SecondaryConditions | null) {
     super("DeleteTrack");
     this.playlist = playlist;
     this.secondary = secondary;
   }
+  
   async execute(): Promise<QueryResult> {
     const tracks = await getAllTracksFromPlaylist(this.playlist);
     if (!this.secondary) {

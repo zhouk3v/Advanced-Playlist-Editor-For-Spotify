@@ -20,6 +20,7 @@ class PrimaryConditions {
   albums: Array<AlbumSearchObject>;
   tracks: Array<TrackSearchObject>;
   playlists: Array<string>;
+
   constructor() {
     this.artists = [];
     this.albums = [];

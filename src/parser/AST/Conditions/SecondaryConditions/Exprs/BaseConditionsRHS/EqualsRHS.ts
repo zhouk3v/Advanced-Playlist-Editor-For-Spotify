@@ -3,10 +3,12 @@ import { BaseConditionRHS } from "./BaseConditionRHS";
 import { TrackObject } from "../../../../../../API/fetchTracks";
 class EqualsRHS extends BaseConditionRHS {
   term: string;
+
   constructor(term: string) {
     super(EQUALS_CONDITION);
     this.term = term;
   }
+  
   evaluate(keyword: string, track: TrackObject): boolean {
     switch (keyword) {
       case "artist":
