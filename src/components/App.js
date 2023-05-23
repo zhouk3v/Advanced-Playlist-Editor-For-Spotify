@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import localforage from "localforage";
 
 import { CLIENT_ID, REDIRECT_URI } from "../API/api";
 
@@ -19,16 +18,11 @@ const scopes = [
   "user-read-email",
 ];
 
-const logout = async () => {
-  localStorage.clear();
-  await localforage.clear();
-  window.location.reload();
-};
-
 const App = () => {
   const ctx = useContext(AuthContext);
 
-  const { token, validState, urlState, codeChallenge, isRedirect } = ctx;
+  const { token, validState, urlState, codeChallenge, isRedirect, logout } =
+    ctx;
 
   return (
     <div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext } from "react";
+import localforage from "localforage";
 import {
   CLIENT_ID,
   REDIRECT_URI,
@@ -33,12 +34,19 @@ const generateCodeChallenge = async (codeVerifier: string) => {
   return base64Encode(digest);
 };
 
+const logout = async () => {
+  localStorage.clear();
+  await localforage.clear();
+  window.location.reload();
+};
+
 interface AuthContextProps {
   token: string | null;
   validState: boolean;
   codeChallenge: string | null;
   urlState: string | null;
   isRedirect: boolean;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -47,6 +55,7 @@ const AuthContext = createContext<AuthContextProps>({
   codeChallenge: "",
   urlState: "",
   isRedirect: false,
+  logout: logout,
 });
 
 interface AuthContextProviderProps {
@@ -147,6 +156,7 @@ export const AuthContextProvider = (
         codeChallenge,
         urlState,
         isRedirect,
+        logout,
       }}
     >
       {props.children}

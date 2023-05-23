@@ -14,6 +14,11 @@ button {
   padding-right: 20px;
 }
 
+a {
+  text-decoration: none;
+  color: white;
+}
+
 .editor {
   display: flex;
   flex-direction: column;
