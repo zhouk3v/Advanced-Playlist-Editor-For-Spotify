@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Parser from "../parser/parser";
+import Parser from "../parser/Parser";
 import QueryResults from "./QueryResults";
 import localforage from "localforage";
 import "./css/Editor.css";

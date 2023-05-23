@@ -1,5 +1,5 @@
-import PrimaryConditions from "../Conditions/PrimaryConditions";
-import SecondaryConditions from "../Conditions/SecondaryCondition";
+import PrimaryConditions from "../Conditions/PrimaryConditions/PrimaryConditions";
+import SecondaryConditions from "../Conditions/SecondaryConditions/SecondaryCondition";
 import { QueryType, QueryResult } from "./QueryType";
 
 class Get extends QueryType {

@@ -2,6 +2,10 @@
 
 export const CLIENT_ID = "c55715b0bcae4293b92804f55b94c15c";
 
+// local testing Uri
+export const REDIRECT_URI = "http://localhost:3000/";
+// production Uri
+
 interface tokenInfo {
   access_token: string;
   refresh_token: string;

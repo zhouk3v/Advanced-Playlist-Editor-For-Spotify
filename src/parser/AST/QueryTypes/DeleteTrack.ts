@@ -1,7 +1,7 @@
 import { getAllTracksFromPlaylist } from "../../../API/fetchTracks";
 import { editPlaylist } from "../../../API/playlists";
 import { DELETE } from "../../config";
-import SecondaryConditions from "../Conditions/SecondaryCondition";
+import SecondaryConditions from "../Conditions/SecondaryConditions/SecondaryCondition";
 import { QueryType, QueryResult } from "./QueryType";
 
 class DeleteTrack extends QueryType {

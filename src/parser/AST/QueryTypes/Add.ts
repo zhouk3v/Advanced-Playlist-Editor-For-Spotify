@@ -2,8 +2,8 @@ import { editPlaylist } from "../../../API/playlists";
 import { getAllTracksFromPlaylist } from "../../../API/fetchTracks";
 import { ADD } from "../../config";
 import { QueryType, QueryResult } from "./QueryType";
-import PrimaryConditions from "../Conditions/PrimaryConditions";
-import SecondaryConditions from "../Conditions/SecondaryCondition";
+import PrimaryConditions from "../Conditions/PrimaryConditions/PrimaryConditions";
+import SecondaryConditions from "../Conditions/SecondaryConditions/SecondaryCondition";
 
 class Add extends QueryType {
   playlist: string;
