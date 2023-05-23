@@ -18,7 +18,7 @@ const scopes = [
   "user-read-email",
 ];
 
-const App = () => {
+const App = (): JSX.Element => {
   const ctx = useContext(AuthContext);
 
   const { token, validState, urlState, codeChallenge, isRedirect, logout } =

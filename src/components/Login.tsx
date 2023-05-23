@@ -5,8 +5,8 @@ interface LoginProps {
   authEndpoint: string;
   clientId: string;
   redirectUri: string;
-  urlState: string;
-  codeChallenge: string;
+  urlState: string | null;
+  codeChallenge: string | null;
   scopes: Array<string>;
 }
 

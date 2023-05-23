@@ -3,28 +3,31 @@ import Parser from "../parser/Parser";
 import QueryResults from "./QueryResults";
 import localforage from "localforage";
 import "./css/Editor.css";
+import { QueryResult } from "../parser/AST/QueryTypes/QueryType";
 
-const Editor = ({ logout }) => {
+interface EditorProps {
+  logout: () => Promise<void>;
+}
+
+const Editor = (props: EditorProps): JSX.Element => {
+  const { logout } = props;
   const [query, setQuery] = useState("");
   const [queryType, setQueryType] = useState("");
-  const [result, setResult] = useState({
-    items: [],
-    url: null,
-  });
+  const [result, setResult] = useState<QueryResult>({});
   const [loading, setLoading] = useState(false);
 
   const parser = new Parser();
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setQuery(event.target.value);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setLoading("Loading");
+    setLoading(true);
     const queryAST = parser.parseInput(query);
     const queryResult = await queryAST.execute();
-    setLoading("");
+    setLoading(false);
     setQueryType(queryAST.type);
     setResult(queryResult);
   };

@@ -1,26 +1,36 @@
 import React from "react";
 
 import "./css/QueryResults.css";
-import InfiniteScroll from "./tables/InfiniteScroll";
 import TrackTable from "./tables/TrackTable";
+import { QueryResult } from "../parser/AST/QueryTypes/QueryType";
 
-const QueryResults = ({ type, results }) => {
+interface QueryResultsProps {
+  type: string;
+  results: QueryResult;
+}
+
+const QueryResults = (props: QueryResultsProps): JSX.Element => {
+  const { type, results } = props;
   // Render the result of a get, add or deletetrack query
-  const renderTracksQuery = () => {
+  const renderTracksQuery = (): JSX.Element => {
+    if (results.items === undefined) {
+      throw new Error("results.items is undefined");
+    }
     return <TrackTable items={results.items}></TrackTable>;
   };
   // Render the result of a create playlist or delete playlist query
-  const renderPlaylistQuery = () => {
+  const renderPlaylistQuery = (): JSX.Element => {
     return <div>{results.result}</div>;
   };
   // Render the result of a search query
-  const renderSearchQuery = () => {
+  const renderSearchQuery = (): JSX.Element => {
     return (
-      <InfiniteScroll
-        type="search"
-        items={results.items}
-        next={results.next}
-      ></InfiniteScroll>
+      // <InfiniteScroll
+      //   type="search"
+      //   items={results.items}
+      //   next={results.next}
+      // ></InfiniteScroll>
+      <div>WIP</div>
     );
   };
 

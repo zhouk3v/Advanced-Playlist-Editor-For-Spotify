@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { getJSON } from "../../API/api";
 import "./css/InfiniteScroll.css";
 
+/*
 const InfiniteScroll = ({ type, items, next }) => {
   const [listItems, setListItems] = useState(items);
   const [nextUrl, setNextUrl] = useState(next);
@@ -62,3 +63,4 @@ const InfiniteScroll = ({ type, items, next }) => {
 };
 
 export default InfiniteScroll;
+*/
