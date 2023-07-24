@@ -10,8 +10,9 @@ const authEndpoint = "https://accounts.spotify.com/authorize";
 const clientId = "c55715b0bcae4293b92804f55b94c15c";
 
 // local testing Uri
-const redirectUri = "http://localhost:3000/";
+// const redirectUri = "http://localhost:3000/";
 // production Uri
+const redirectUri = "https://build.d2j8twv1ebltnq.amplifyapp.com/";
 
 const scopes = [
   "playlist-read-private",
