@@ -1,12 +1,12 @@
 import React, { useContext } from "react";
 
-import { CLIENT_ID, REDIRECT_URI } from "../API/api";
+import { CLIENT_ID, REDIRECT_URI } from "./API/api";
 
-import Login from "./Login";
+import Login from "./components/Login";
 
-import Editor from "./Editor";
+import Editor from "./components/Editor";
 
-import AuthContext from "../context/auth-context";
+import AuthContext from "./context/auth-context";
 
 const authEndpoint = "https://accounts.spotify.com/authorize";
 
