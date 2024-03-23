@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import { useState, useEffect, createContext } from "react";
 import localforage from "localforage";
 import {
   CLIENT_ID,
@@ -9,7 +9,7 @@ import {
 
 const generateRandomString = (length: number) => {
   let text = "";
-  let possible =
+  const possible =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
   for (let i = 0; i < length; i++) {

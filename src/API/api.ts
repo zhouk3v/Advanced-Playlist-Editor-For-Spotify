@@ -3,7 +3,7 @@
 export const CLIENT_ID = "c55715b0bcae4293b92804f55b94c15c";
 
 // local testing Uri
-export const REDIRECT_URI = "http://localhost:5173/";
+export const REDIRECT_URI = "http://localhost:5173";
 // production Uri
 
 interface tokenInfo {

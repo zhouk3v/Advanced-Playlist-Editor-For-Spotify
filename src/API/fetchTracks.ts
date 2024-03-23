@@ -172,7 +172,7 @@ export const getAllTracksFromPlaylist = async (
   }
   // Grab the tracks on the playlist, iterating through each page
   let tracksUrl = playlistObj.tracks.href;
-  let nextTracksUrl: string | null = null;
+  const nextTracksUrl: string | null = null;
   do {
     const trackPageJson = await getJSON<
       SpotifyApi.PagingObject<SpotifyApi.PlaylistTrackObject>
@@ -183,7 +183,7 @@ export const getAllTracksFromPlaylist = async (
       }
       tracks.push(trackObj.track);
     });
-    let nextTracksUrl = trackPageJson.next;
+    const nextTracksUrl = trackPageJson.next;
     if (nextTracksUrl) {
       tracksUrl = nextTracksUrl;
     }

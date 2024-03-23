@@ -1,5 +1,3 @@
-import React from "react";
-
 import "./css/QueryResults.css";
 import TrackTable from "./tables/TrackTable";
 import { QueryResult } from "../parser/AST/QueryTypes/QueryType";

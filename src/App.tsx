@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 
 import { CLIENT_ID, REDIRECT_URI } from "./API/api";
 
